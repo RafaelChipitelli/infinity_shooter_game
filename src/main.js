@@ -3,9 +3,13 @@ import Phaser from "phaser";
 import TitleScreen from "./scenes/TitleScreen";
 import Game from "./scenes/Game";
 
+// Obtenha as dimensões da tela do computador
+const width = window.innerWidth;
+const height = window.innerHeight;
+
 const config = {
-    width: 800,
-    height: 500,
+    width: width,
+    height: height,
     type: Phaser.AUTO,
     physics: {
         default: "arcade",
@@ -13,6 +17,10 @@ const config = {
             gravity: { y: 0 },
             debug: true
         }
+    },
+    scale: {
+        mode: Phaser.Scale.RESIZE,
+        autoCenter: Phaser.Scale.CENTER_BOTH
     }
 }
 
