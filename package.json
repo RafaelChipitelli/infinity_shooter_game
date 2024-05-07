@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "start": "parcel watch src/index.html",
+        "start": "parcel src/index.html",
         "build-css": "sass src/main.scss styles.css",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
