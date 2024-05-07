@@ -1,3 +1,5 @@
+import Phaser from "phaser";
+import { HUD_TEXTS } from "./HUDConstants";
 class Game extends Phaser.Scene {
     constructor() {
         super();
@@ -71,6 +73,16 @@ class Game extends Phaser.Scene {
             // Se o jogador está ultrapassando a borda inferior, inverter a direção vertical
             this.playerVelocityY = -Math.abs(this.playerVelocityY) - this.playerSpeed;
         }
+
+        //  // Verificar se o jogador está tentando ultrapassar os limites do mapa
+        // if (this.player.x > 50 || this.player.x < this.game.config.width + 65) {
+        //     // Se o jogador está ultrapassando os limites horizontais, inverter a direção horizontal
+        //     this.playerVelocityX = this.playerSpeed;
+        // }
+        // if (this.player.y > 50 || this.player.y < this.game.config.height + 65) {
+        //     // Se o jogador está ultrapassando os limites verticais, inverter a direção vertical
+        //     this.playerVelocityY = this.playerSpeed;
+        // }
     }
     
     
