@@ -24,6 +24,7 @@ class Game extends Phaser.Scene {
             this.physics.add.existing(enemy);
             enemy.body.setVelocity(0, 0);
             this.enemies.push(enemy);
+            
         }
 
         this.input.keyboard.on('keydown', (event) => {
