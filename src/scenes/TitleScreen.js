@@ -31,6 +31,9 @@ export default class TitleScreen extends Phaser.Scene {
                 enemiesAliveText.setText(`Enemies Alive: ${HUD_TEXTS.enemiesAlive}`);
                 lifeText.setText(`Life: ${HUD_TEXTS.life}`);
                 dpsText.setText(`DPS: ${HUD_TEXTS.dps}`);
+
+                // Inicia a cena principal do jogo
+                this.scene.start('game');
             });
     }
 }
