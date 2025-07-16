@@ -30,4 +30,3 @@ game.scene.add("titlescreen", TitleScreen)
 game.scene.add("game", Game)
 
 game.scene.start("titlescreen")
-game.scene.start("game")
