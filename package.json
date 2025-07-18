@@ -5,7 +5,7 @@
     "scripts": {
         "start": "parcel src/index.html",
         "build-css": "sass src/main.scss styles.css",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Tudo certo por aqui :)\" && exit 1"
     },
     "author": "",
     "license": "ISC",
