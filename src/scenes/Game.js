@@ -103,14 +103,22 @@ class Game extends Phaser.Scene {
         // Atualizar a direção de cada projétil em direção ao alvo
         this.projectiles.children.each(projectile => {
             if (!projectile.active || !projectile.target) return;
+            if (!projectile.target.active) {
+                projectile.destroy();
+                return;
+            }
             const angle = Phaser.Math.Angle.Between(projectile.x, projectile.y, projectile.target.x, projectile.target.y);
             projectile.body.setVelocity(
                 Math.cos(angle) * this.projectileSpeed,
                 Math.sin(angle) * this.projectileSpeed
             );
 
-            // destruir projétil se estiver muito próximo do alvo
+            // destruir projétil e inimigo se estiver muito próximo do alvo
             if (Phaser.Math.Distance.Between(projectile.x, projectile.y, projectile.target.x, projectile.target.y) < 10) {
+                // remove inimigo da tela
+                projectile.target.destroy();
+                // remove inimigo do array de inimigos
+                this.enemies = this.enemies.filter(e => e !== projectile.target);
                 projectile.destroy();
             }
 
