@@ -4,8 +4,7 @@
     "main": "index.js",
     "scripts": {
         "start": "parcel src/index.html",
-        "build-css": "sass src/main.scss styles.css",
-        "test": "echo \"Tudo certo por aqui :)\" && exit 1"
+        "build-css": "sass src/main.scss styles.css"
     },
     "author": "",
     "license": "ISC",
