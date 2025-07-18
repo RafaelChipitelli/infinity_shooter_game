@@ -10,12 +10,14 @@ class Game extends Phaser.Scene {
         this.playerVelocityX = 0;
         this.playerVelocityY = 0;
         this.cursors = null;
+        this.wasdKeys = null;
         this.projectiles = null;
         this.projectileSpeed = 300;
     }
 
     create() {
         this.cursors = this.input.keyboard.createCursorKeys();
+        this.wasdKeys = this.input.keyboard.addKeys('W,A,S,D');
 
         this.player = this.add.circle(400, 250, 10, 0xffffffff, 1);
         this.physics.add.existing(this.player);
@@ -80,15 +82,20 @@ class Game extends Phaser.Scene {
         this.playerVelocityX = 0;
         this.playerVelocityY = 0;
 
-        if (this.cursors.left.isDown && this.player.x > 50) {
+        const leftPressed = this.cursors.left.isDown || this.wasdKeys.A.isDown;
+        const rightPressed = this.cursors.right.isDown || this.wasdKeys.D.isDown;
+        const upPressed = this.cursors.up.isDown || this.wasdKeys.W.isDown;
+        const downPressed = this.cursors.down.isDown || this.wasdKeys.S.isDown;
+
+        if (leftPressed && this.player.x > 50) {
             this.playerVelocityX = -this.playerSpeed;
-        } else if (this.cursors.right.isDown && this.player.x < this.sys.canvas.width - 50) {
+        } else if (rightPressed && this.player.x < this.sys.canvas.width - 50) {
             this.playerVelocityX = this.playerSpeed;
         }
 
-        if (this.cursors.up.isDown && this.player.y > 50) {
+        if (upPressed && this.player.y > 50) {
             this.playerVelocityY = -this.playerSpeed;
-        } else if (this.cursors.down.isDown && this.player.y < this.sys.canvas.height - 50) {
+        } else if (downPressed && this.player.y < this.sys.canvas.height - 50) {
             this.playerVelocityY = this.playerSpeed;
         }
 
