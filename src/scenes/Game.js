@@ -4,7 +4,7 @@ class Game extends Phaser.Scene {
     constructor() {
         super();
         this.player = null;
-        this.enemies = [];
+        this.enemies = null;
         this.playerSpeed = 150;
         this.enemySpeed = 150;
         this.playerVelocityX = 0;
@@ -23,6 +23,9 @@ class Game extends Phaser.Scene {
 
         this.projectiles = this.physics.add.group();
 
+        // grupo de inimigos para facilitar a colisão
+        this.enemies = this.physics.add.group();
+
         // dispara um projétil a cada segundo mirando no inimigo mais próximo
         this.time.addEvent({
             delay: 1000,
@@ -33,18 +36,20 @@ class Game extends Phaser.Scene {
 
         // Criar vários inimigos
         for (let i = 0; i < 20; i++) {
-            const enemy = this.add.circle(100 + (i)*100, 100 + (i)*100 , 10, 0xFF0000, 1);
+            const enemy = this.add.circle(100 + i * 100, 100 + i * 100, 10, 0xFF0000, 1);
             this.physics.add.existing(enemy);
             enemy.body.setVelocity(0, 0);
-            this.enemies.push(enemy);
-            
+            this.enemies.add(enemy);
         }
+
+        // prevenir que os inimigos se sobreponham
+        this.physics.add.collider(this.enemies, this.enemies);
 
         // movimentação será controlada diretamente no método update
     }
 
     fireProjectile() {
-        if (this.enemies.length === 0) {
+        if (this.enemies.getChildren().length === 0) {
             return;
         }
 
@@ -53,7 +58,7 @@ class Game extends Phaser.Scene {
 
         let closestEnemy = null;
         let shortestDist = Infinity;
-        this.enemies.forEach(enemy => {
+        this.enemies.getChildren().forEach(enemy => {
             const dist = Phaser.Math.Distance.Between(enemy.x, enemy.y, playerX, playerY);
             if (dist < shortestDist) {
                 shortestDist = dist;
@@ -92,13 +97,16 @@ class Game extends Phaser.Scene {
         // Atualizar cada inimigo individualmente
         const playerX = this.player.x;
         const playerY = this.player.y;
-        this.enemies.forEach(enemy => {
+        this.enemies.getChildren().forEach(enemy => {
             const angle = Phaser.Math.Angle.Between(enemy.x, enemy.y, playerX, playerY);
             enemy.body.setVelocity(
                 Math.cos(angle) * this.enemySpeed,
                 Math.sin(angle) * this.enemySpeed
             );
         });
+
+        // força cada inimigo a manter distância dos outros
+        this.separateEnemies();
 
         // Atualizar a direção de cada projétil em direção ao alvo
         this.projectiles.children.each(projectile => {
@@ -137,6 +145,31 @@ class Game extends Phaser.Scene {
         if (this.player.y > height - 65) {
             // Se o jogador está ultrapassando a borda inferior, inverter a direção vertical
             this.playerVelocityY = -Math.abs(this.playerVelocityY) - this.playerSpeed;
+        }
+    }
+
+    /**
+     * Mantém os inimigos afastados uns dos outros para evitar sobreposição
+     */
+    separateEnemies() {
+        const enemies = this.enemies.getChildren();
+        for (let i = 0; i < enemies.length; i++) {
+            const enemyA = enemies[i];
+            for (let j = i + 1; j < enemies.length; j++) {
+                const enemyB = enemies[j];
+                const dist = Phaser.Math.Distance.Between(enemyA.x, enemyA.y, enemyB.x, enemyB.y);
+                const minDist = 20;
+                if (dist > 0 && dist < minDist) {
+                    const overlap = minDist - dist;
+                    const angle = Phaser.Math.Angle.Between(enemyB.x, enemyB.y, enemyA.x, enemyA.y);
+                    const offsetX = Math.cos(angle) * (overlap / 2);
+                    const offsetY = Math.sin(angle) * (overlap / 2);
+                    enemyA.x += offsetX;
+                    enemyA.y += offsetY;
+                    enemyB.x -= offsetX;
+                    enemyB.y -= offsetY;
+                }
+            }
         }
     }
 }
