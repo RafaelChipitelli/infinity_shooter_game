@@ -12,8 +12,10 @@ export default class TitleScreen extends Phaser.Scene {
         const lifeText = this.add.text(10, 70, `Life: ${HUD_TEXTS.life}`, { fontSize: '16px', fill: '#ffffff' });
         const dpsText = this.add.text(10, 90, `DPS: ${HUD_TEXTS.dps}`, { fontSize: '16px', fill: '#ffffff' });
 
-        // Crie um botão
-        const button = this.add.text(200, 200, 'Incrementar', { fill: '#0f0', fontSize: '20px', cursor: 'pointer' }) // Define o cursor como "pointer"
+        // Crie um botão centralizado
+        const { centerX, centerY } = this.cameras.main;
+        const button = this.add.text(centerX, centerY, 'START', { fill: '#0f0', fontSize: '20px', cursor: 'pointer' })
+            .setOrigin(0.5) // posiciona o centro do texto no ponto especificado
             .setInteractive()
             .on('pointerover', () => button.setTint(0xcccccc)) // Muda a cor ao passar o cursor sobre o botão
             .on('pointerout', () => button.clearTint()) // Remove a cor ao retirar o cursor do botão
