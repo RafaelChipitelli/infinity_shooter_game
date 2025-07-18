@@ -125,8 +125,8 @@ class Game extends Phaser.Scene {
             if (Phaser.Math.Distance.Between(projectile.x, projectile.y, projectile.target.x, projectile.target.y) < 10) {
                 // remove inimigo da tela
                 projectile.target.destroy();
-                // remove inimigo do array de inimigos
-                this.enemies = this.enemies.filter(e => e !== projectile.target);
+                // remove inimigo do grupo de inimigos
+                this.enemies.remove(projectile.target, true, true);
                 projectile.destroy();
             }
 
