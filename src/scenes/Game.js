@@ -10,6 +10,8 @@ class Game extends Phaser.Scene {
         this.playerVelocityX = 0;
         this.playerVelocityY = 0;
         this.cursors = null;
+        this.projectiles = null;
+        this.projectileSpeed = 300;
     }
 
     create() {
@@ -18,6 +20,16 @@ class Game extends Phaser.Scene {
         this.player = this.add.circle(400, 250, 10, 0xffffffff, 1);
         this.physics.add.existing(this.player);
         this.player.body.setVelocity(0, 0);
+
+        this.projectiles = this.physics.add.group();
+
+        // dispara um projétil a cada segundo mirando no inimigo mais próximo
+        this.time.addEvent({
+            delay: 1000,
+            callback: this.fireProjectile,
+            callbackScope: this,
+            loop: true
+        });
 
         // Criar vários inimigos
         for (let i = 0; i < 20; i++) {
@@ -29,6 +41,33 @@ class Game extends Phaser.Scene {
         }
 
         // movimentação será controlada diretamente no método update
+    }
+
+    fireProjectile() {
+        if (this.enemies.length === 0) {
+            return;
+        }
+
+        const playerX = this.player.x;
+        const playerY = this.player.y;
+
+        let closestEnemy = null;
+        let shortestDist = Infinity;
+        this.enemies.forEach(enemy => {
+            const dist = Phaser.Math.Distance.Between(enemy.x, enemy.y, playerX, playerY);
+            if (dist < shortestDist) {
+                shortestDist = dist;
+                closestEnemy = enemy;
+            }
+        });
+
+        if (!closestEnemy) return;
+
+        const projectile = this.add.circle(playerX, playerY, 5, 0x00ff00, 1);
+        this.physics.add.existing(projectile);
+        projectile.target = closestEnemy;
+        projectile.body.setVelocity(0, 0);
+        this.projectiles.add(projectile);
     }
 
     update() {
@@ -60,6 +99,26 @@ class Game extends Phaser.Scene {
                 Math.sin(angle) * this.enemySpeed
             );
         });
+
+        // Atualizar a direção de cada projétil em direção ao alvo
+        this.projectiles.children.each(projectile => {
+            if (!projectile.active || !projectile.target) return;
+            const angle = Phaser.Math.Angle.Between(projectile.x, projectile.y, projectile.target.x, projectile.target.y);
+            projectile.body.setVelocity(
+                Math.cos(angle) * this.projectileSpeed,
+                Math.sin(angle) * this.projectileSpeed
+            );
+
+            // destruir projétil se estiver muito próximo do alvo
+            if (Phaser.Math.Distance.Between(projectile.x, projectile.y, projectile.target.x, projectile.target.y) < 10) {
+                projectile.destroy();
+            }
+
+            const { width, height } = this.game.config;
+            if (projectile.x < 0 || projectile.x > width || projectile.y < 0 || projectile.y > height) {
+                projectile.destroy();
+            }
+        }, this);
 
         // Verificar se o jogador está tentando ultrapassar os limites do mapa
         const { width, height } = this.game.config;
