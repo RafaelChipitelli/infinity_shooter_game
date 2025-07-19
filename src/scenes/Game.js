@@ -10,6 +10,7 @@ import {
     separateEnemies
 } from "./helpers/enemies";
 import { fireProjectile, updateProjectiles } from "./helpers/projectiles";
+import { HUD_TEXTS } from "./HUDConstants";
 
 class Game extends Phaser.Scene {
     constructor() {
@@ -24,6 +25,10 @@ class Game extends Phaser.Scene {
         this.wasdKeys = null;
         this.projectiles = null;
         this.projectileSpeed = 300;
+
+        this.hudTexts = {};
+        this.enemiesTotal = 0;
+        this.startTime = 0;
     }
 
     create() {
@@ -45,7 +50,18 @@ class Game extends Phaser.Scene {
         });
 
         // Criar vários inimigos
-        createEnemies(this, 20);
+        const enemyCount = 20;
+        createEnemies(this, enemyCount);
+        this.enemiesTotal = enemyCount;
+
+        // Inicializa HUD
+        this.startTime = this.time.now;
+        this.hudTexts.enemiesAlive = this.add.text(10, 10, '', { fontSize: '16px', fill: '#ffffff' });
+        this.hudTexts.enemiesDefeated = this.add.text(10, 30, '', { fontSize: '16px', fill: '#ffffff' });
+        this.hudTexts.gold = this.add.text(10, 50, `Gold: ${HUD_TEXTS.gold}`, { fontSize: '16px', fill: '#ffffff' });
+        this.hudTexts.timeAlive = this.add.text(10, 70, '', { fontSize: '16px', fill: '#ffffff' });
+        this.hudTexts.life = this.add.text(10, 90, `Life: ${HUD_TEXTS.life}`, { fontSize: '16px', fill: '#ffffff' });
+        this.hudTexts.dps = this.add.text(10, 110, `DPS: ${HUD_TEXTS.dps}`, { fontSize: '16px', fill: '#ffffff' });
 
         // prevenir que os inimigos se sobreponham
         this.physics.add.collider(this.enemies, this.enemies);
@@ -59,6 +75,14 @@ class Game extends Phaser.Scene {
         separateEnemies(this);
         updateProjectiles(this);
         enforcePlayerBounds(this);
+
+        // Atualiza valores do HUD
+        const alive = this.enemies.getChildren().length;
+        const defeated = this.enemiesTotal - alive;
+        this.hudTexts.enemiesAlive.setText(`Enemies Alive: ${alive}`);
+        this.hudTexts.enemiesDefeated.setText(`Enemies Defeated: ${defeated}`);
+        const timeSeconds = Math.floor((this.time.now - this.startTime) / 1000);
+        this.hudTexts.timeAlive.setText(`Time Alive: ${timeSeconds}s`);
     }
 
 }
