@@ -11,6 +11,7 @@ export default class TitleScreen extends Phaser.Scene {
         const enemiesAliveText = this.add.text(10, 50, `Enemies Alive: ${HUD_TEXTS.enemiesAlive}`, { fontSize: '16px', fill: '#ffffff' });
         const lifeText = this.add.text(10, 70, `Life: ${HUD_TEXTS.life}`, { fontSize: '16px', fill: '#ffffff' });
         const dpsText = this.add.text(10, 90, `DPS: ${HUD_TEXTS.dps}`, { fontSize: '16px', fill: '#ffffff' });
+        const goldText = this.add.text(10, 110, `Gold: ${HUD_TEXTS.gold}`, { fontSize: '16px', fill: '#ffffff' });
 
         // Crie um botão centralizado
         const { centerX, centerY } = this.cameras.main;
@@ -26,6 +27,7 @@ export default class TitleScreen extends Phaser.Scene {
                 HUD_TEXTS.enemiesAlive += 1;
                 HUD_TEXTS.life += 1;
                 HUD_TEXTS.dps += 1;
+                HUD_TEXTS.gold += 1;
 
                 // Atualiza os textos do HUD
                 scoreText.setText(`Score: ${HUD_TEXTS.score}`);
@@ -33,6 +35,7 @@ export default class TitleScreen extends Phaser.Scene {
                 enemiesAliveText.setText(`Enemies Alive: ${HUD_TEXTS.enemiesAlive}`);
                 lifeText.setText(`Life: ${HUD_TEXTS.life}`);
                 dpsText.setText(`DPS: ${HUD_TEXTS.dps}`);
+                goldText.setText(`Gold: ${HUD_TEXTS.gold}`);
 
                 // Inicia a cena principal do jogo
                 this.scene.start('game');

@@ -4,7 +4,8 @@ const HUD_TEXTS = {
     round: 1,
     enemiesAlive: 1,
     life: 100,
-    dps: 1
+    dps: 1,
+    gold: 0
 };
 
 export { HUD_TEXTS };
