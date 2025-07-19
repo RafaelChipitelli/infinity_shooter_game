@@ -26,6 +26,8 @@ class Game extends Phaser.Scene {
         this.projectiles = null;
         this.projectileSpeed = 300;
 
+        this.touchPointer = null;
+
         this.hudTexts = {};
         this.enemiesTotal = 0;
         this.startTime = 0;
@@ -36,6 +38,19 @@ class Game extends Phaser.Scene {
         this.wasdKeys = this.input.keyboard.addKeys('W,A,S,D');
 
         this.player = createPlayer(this);
+
+        // Registra eventos de toque para movimentação
+        this.input.on('pointerdown', (pointer) => {
+            this.touchPointer = pointer;
+        });
+        this.input.on('pointerup', () => {
+            this.touchPointer = null;
+        });
+        this.input.on('pointermove', (pointer) => {
+            if (this.touchPointer) {
+                this.touchPointer = pointer;
+            }
+        });
 
         this.projectiles = this.physics.add.group();
 

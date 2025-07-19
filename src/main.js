@@ -3,9 +3,9 @@ import Phaser from "phaser";
 import TitleScreen from "./scenes/TitleScreen";
 import Game from "./scenes/Game";
 
-// Obtenha as dimensões da tela do computador
-const width = window.innerWidth;
-const height = window.innerHeight;
+// Defina dimensões priorizando sempre a orientação horizontal
+let width = Math.max(window.innerWidth, window.innerHeight);
+let height = Math.min(window.innerWidth, window.innerHeight);
 
 const config = {
     width: width,
@@ -25,6 +25,18 @@ const config = {
 }
 
 const game = new Phaser.Game(config)
+
+// Tenta bloquear a orientação para horizontal quando suportado
+if (screen.orientation && screen.orientation.lock) {
+    screen.orientation.lock('landscape').catch(() => {});
+}
+
+// Ajusta tamanho caso a tela seja redimensionada
+window.addEventListener('resize', () => {
+    width = Math.max(window.innerWidth, window.innerHeight);
+    height = Math.min(window.innerWidth, window.innerHeight);
+    game.scale.resize(width, height);
+});
 
 game.scene.add("titlescreen", TitleScreen)
 game.scene.add("game", Game)

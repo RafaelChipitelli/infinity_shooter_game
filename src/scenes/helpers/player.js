@@ -14,6 +14,7 @@ export function updatePlayerMovement(scene) {
     const upPressed = scene.cursors.up.isDown || scene.wasdKeys.W.isDown;
     const downPressed = scene.cursors.down.isDown || scene.wasdKeys.S.isDown;
 
+
     if (leftPressed && scene.player.x > 50) {
         scene.playerVelocityX = -scene.playerSpeed;
     } else if (rightPressed && scene.player.x < scene.sys.canvas.width - 50) {
@@ -24,6 +25,18 @@ export function updatePlayerMovement(scene) {
         scene.playerVelocityY = -scene.playerSpeed;
     } else if (downPressed && scene.player.y < scene.sys.canvas.height - 50) {
         scene.playerVelocityY = scene.playerSpeed;
+    }
+
+    // Controles por toque: mover o jogador na direção do toque
+    if (scene.touchPointer) {
+        const angle = Phaser.Math.Angle.Between(
+            scene.player.x,
+            scene.player.y,
+            scene.touchPointer.worldX,
+            scene.touchPointer.worldY
+        );
+        scene.playerVelocityX = Math.cos(angle) * scene.playerSpeed;
+        scene.playerVelocityY = Math.sin(angle) * scene.playerSpeed;
     }
 
     scene.player.body.setVelocity(scene.playerVelocityX, scene.playerVelocityY);
