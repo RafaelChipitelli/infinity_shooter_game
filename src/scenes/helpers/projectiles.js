@@ -22,6 +22,7 @@ export function fireProjectile(scene) {
     scene.physics.add.existing(projectile);
     projectile.target = closestEnemy;
     projectile.body.setVelocity(0, 0);
+    projectile.damage = scene.projectileDamage || 1;
     scene.projectiles.add(projectile);
 }
 
@@ -51,8 +52,11 @@ export function updateProjectiles(scene) {
                 projectile.target.y
             ) < 10
         ) {
-            projectile.target.destroy();
-            scene.enemies.remove(projectile.target, true, true);
+            projectile.target.health -= projectile.damage;
+            if (projectile.target.health <= 0) {
+                projectile.target.destroy();
+                scene.enemies.remove(projectile.target, true, true);
+            }
             projectile.destroy();
         }
 
