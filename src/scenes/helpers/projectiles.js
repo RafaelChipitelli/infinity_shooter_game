@@ -52,11 +52,8 @@ export function updateProjectiles(scene) {
                 projectile.target.y
             ) < 10
         ) {
-            projectile.target.health -= projectile.damage;
-            if (projectile.target.health <= 0) {
-                projectile.target.destroy();
-                scene.enemies.remove(projectile.target, true, true);
-            }
+            projectile.target.destroy();
+            scene.enemies.remove(projectile.target, true, true);
             projectile.destroy();
         }
 
