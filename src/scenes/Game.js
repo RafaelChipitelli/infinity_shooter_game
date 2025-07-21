@@ -35,6 +35,8 @@ class Game extends Phaser.Scene {
         this.hudTexts = {};
         this.enemiesTotal = 0;
         this.startTime = 0;
+        this.currentRound = 1;
+        this.nextWaveScheduled = false;
     }
 
     create() {
@@ -71,10 +73,8 @@ class Game extends Phaser.Scene {
             loop: true
         });
 
-        // Criar vários inimigos
-        const enemyCount = 20;
-        createEnemies(this, enemyCount);
-        this.enemiesTotal = enemyCount;
+        // Inicializa primeira onda de inimigos
+        this.spawnWave();
 
         // Inicializa HUD
         this.startTime = this.time.now;
@@ -84,6 +84,7 @@ class Game extends Phaser.Scene {
         this.hudTexts.timeAlive = this.add.text(10, 70, '', { fontSize: '16px', fill: '#ffffff' });
         this.hudTexts.life = this.add.text(10, 90, `Life: ${HUD_TEXTS.life}`, { fontSize: '16px', fill: '#ffffff' });
         this.hudTexts.dps = this.add.text(10, 110, `DPS: ${HUD_TEXTS.dps}`, { fontSize: '16px', fill: '#ffffff' });
+        this.hudTexts.round = this.add.text(10, 130, `Round: ${this.currentRound}`, { fontSize: '16px', fill: '#ffffff' });
 
         // prevenir que os inimigos se sobreponham
         this.physics.add.collider(this.enemies, this.enemies);
@@ -100,12 +101,22 @@ class Game extends Phaser.Scene {
 
         // Atualiza valores do HUD
         const alive = this.enemies.getChildren().length;
+        if (alive === 0 && !this.nextWaveScheduled) {
+            this.nextWaveScheduled = true;
+            this.time.delayedCall(1000, () => {
+                this.currentRound += 1;
+                HUD_TEXTS.round = this.currentRound;
+                this.spawnWave();
+                this.nextWaveScheduled = false;
+            });
+        }
         const defeated = this.enemiesTotal - alive;
         this.hudTexts.enemiesAlive.setText(`Enemies Alive: ${alive}`);
         this.hudTexts.enemiesDefeated.setText(`Enemies Defeated: ${defeated}`);
         const timeSeconds = Math.floor((this.time.now - this.startTime) / 1000);
         this.hudTexts.timeAlive.setText(`Time Alive: ${timeSeconds}s`);
         this.hudTexts.life.setText(`Life: ${HUD_TEXTS.life}`);
+        this.hudTexts.round.setText(`Round: ${this.currentRound}`);
     }
 
     handlePlayerEnemyCollision(player, enemy) {
@@ -114,6 +125,12 @@ class Game extends Phaser.Scene {
         if (player.health <= 0) {
             this.scene.restart();
         }
+    }
+
+    spawnWave() {
+        const enemyCount = this.currentRound * 5;
+        createEnemies(this, enemyCount);
+        this.enemiesTotal += enemyCount;
     }
 
 }
