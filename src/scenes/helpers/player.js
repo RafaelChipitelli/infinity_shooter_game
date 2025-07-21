@@ -2,6 +2,7 @@ export function createPlayer(scene) {
     const player = scene.add.circle(400, 250, 10, 0xffffff, 1);
     scene.physics.add.existing(player);
     player.body.setVelocity(0, 0);
+    player.health = scene.playerInitialHealth || 100;
     return player;
 }
 

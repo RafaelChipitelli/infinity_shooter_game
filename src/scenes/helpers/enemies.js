@@ -3,6 +3,7 @@ export function createEnemies(scene, count) {
         const enemy = scene.add.circle(100 + i * 100, 100 + i * 100, 10, 0xFF0000, 1);
         scene.physics.add.existing(enemy);
         enemy.body.setVelocity(0, 0);
+        enemy.health = 20;
         scene.enemies.add(enemy);
     }
 }

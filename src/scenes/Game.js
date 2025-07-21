@@ -25,6 +25,10 @@ class Game extends Phaser.Scene {
         this.wasdKeys = null;
         this.projectiles = null;
         this.projectileSpeed = 300;
+        this.projectileDamage = HUD_TEXTS.dps;
+
+        this.playerInitialHealth = HUD_TEXTS.life;
+        this.enemyDamage = 10;
 
         this.touchPointer = null;
 
@@ -38,6 +42,7 @@ class Game extends Phaser.Scene {
         this.wasdKeys = this.input.keyboard.addKeys('W,A,S,D');
 
         this.player = createPlayer(this);
+        HUD_TEXTS.life = this.player.health;
 
         // Registra eventos de toque para movimentação
         this.input.on('pointerdown', (pointer) => {
@@ -56,6 +61,8 @@ class Game extends Phaser.Scene {
 
         // grupo de inimigos para facilitar a colisão
         this.enemies = this.physics.add.group();
+
+        this.physics.add.overlap(this.player, this.enemies, this.handlePlayerEnemyCollision, null, this);
 
         // dispara um projétil a cada segundo mirando no inimigo mais próximo
         this.time.addEvent({
@@ -98,6 +105,15 @@ class Game extends Phaser.Scene {
         this.hudTexts.enemiesDefeated.setText(`Enemies Defeated: ${defeated}`);
         const timeSeconds = Math.floor((this.time.now - this.startTime) / 1000);
         this.hudTexts.timeAlive.setText(`Time Alive: ${timeSeconds}s`);
+        this.hudTexts.life.setText(`Life: ${HUD_TEXTS.life}`);
+    }
+
+    handlePlayerEnemyCollision(player, enemy) {
+        player.health -= this.enemyDamage;
+        HUD_TEXTS.life = player.health;
+        if (player.health <= 0) {
+            this.scene.restart();
+        }
     }
 
 }
