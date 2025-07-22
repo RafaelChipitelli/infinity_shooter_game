@@ -25,7 +25,8 @@ const config = {
 
     // 🧩 Ativa suporte para DOM Elements (como input de nickname)
     dom: {
-        createContainer: true
+        createContainer: true,
+        pointerEvents: 'auto'
     }
 };
 
