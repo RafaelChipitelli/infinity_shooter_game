@@ -9,6 +9,12 @@ export default class TitleScreen extends Phaser.Scene {
 
         // Crie um botão centralizado
         const { centerX, centerY } = this.cameras.main;
+        // Campo para digitar nickname
+        const nicknameInput = this.add.dom(centerX, centerY - 40, 'input')
+            .setOrigin(0.5);
+        nicknameInput.node.setAttribute('type', 'text');
+        nicknameInput.node.setAttribute('placeholder', 'Nickname');
+        nicknameInput.node.value = localStorage.getItem('nickname') || '';
         // 🔥 Mostrar Top 10 do Firebase
         let startY = 50;
 
@@ -40,6 +46,13 @@ export default class TitleScreen extends Phaser.Scene {
             .on('pointerover', () => button.setTint(0xcccccc))
             .on('pointerout', () => button.clearTint())
             .on('pointerdown', () => {
+                const value = nicknameInput.node.value.trim();
+                if (!value) {
+                    nicknameInput.node.focus();
+                    return;
+                }
+                localStorage.setItem('nickname', value);
+
                 // Reinicia valores importantes do HUD ao iniciar o jogo
                 HUD_TEXTS.life = 100;
                 HUD_TEXTS.dps = 1;
@@ -47,5 +60,8 @@ export default class TitleScreen extends Phaser.Scene {
                 // Inicia a cena principal do jogo
                 this.scene.start('game');
             });
+
+        // Permitir que a tecla ENTER também inicie o jogo
+        this.input.keyboard.on('keydown-ENTER', () => button.emit('pointerdown'));
     }
 }
