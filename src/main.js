@@ -21,10 +21,15 @@ const config = {
     scale: {
         mode: Phaser.Scale.RESIZE,
         autoCenter: Phaser.Scale.CENTER_BOTH
-    }
-}
+    },
 
-const game = new Phaser.Game(config)
+    // 🧩 Ativa suporte para DOM Elements (como input de nickname)
+    dom: {
+        createContainer: true
+    }
+};
+
+const game = new Phaser.Game(config);
 
 // Tenta bloquear a orientação para horizontal quando suportado
 if (screen.orientation && screen.orientation.lock) {
@@ -38,7 +43,9 @@ window.addEventListener('resize', () => {
     game.scale.resize(width, height);
 });
 
-game.scene.add("titlescreen", TitleScreen)
-game.scene.add("game", Game)
+// Registra cenas
+game.scene.add("titlescreen", TitleScreen);
+game.scene.add("game", Game);
 
-game.scene.start("titlescreen")
+// Inicia com a tela de título
+game.scene.start("titlescreen");

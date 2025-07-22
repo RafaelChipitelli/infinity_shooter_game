@@ -11,6 +11,8 @@ import {
 } from "./helpers/enemies";
 import { fireProjectile, updateProjectiles } from "./helpers/projectiles";
 import { HUD_TEXTS } from "./HUDConstants";
+/* global db */ // habilita uso da variável global `db` do Firebase
+
 
 class Game extends Phaser.Scene {
     constructor() {
@@ -123,8 +125,18 @@ class Game extends Phaser.Scene {
         player.health -= this.enemyDamage;
         HUD_TEXTS.life = player.health;
         if (player.health <= 0) {
-            this.scene.restart();
-        }
+    const nickname = localStorage.getItem('nickname') || 'Anônimo';
+    const survivalTime = Math.floor((this.time.now - this.startTime) / 1000);
+
+    db.collection("scores").add({
+        nickname: nickname,
+        time: survivalTime,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        this.scene.restart();
+    });
+}
+
     }
 
     spawnWave() {
