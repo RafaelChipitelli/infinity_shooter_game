@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import { HUD_TEXTS } from "./HUDConstants";
-/* global db */ // <- Isso evita erro de "db is not defined"
+import { db } from "../firebase";
 
 export default class TitleScreen extends Phaser.Scene {
     preload() {}
