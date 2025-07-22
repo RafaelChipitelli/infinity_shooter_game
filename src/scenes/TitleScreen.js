@@ -40,7 +40,7 @@ export default class TitleScreen extends Phaser.Scene {
         nicknameInput.node.setAttribute('type', 'text');
         nicknameInput.node.setAttribute('placeholder', 'Nickname');
         nicknameInput.node.value = localStorage.getItem('nickname') || '';
-        nicknameInput.node.addEventListener('pointerdown', (e) => {
+        nicknameInput.node.addEventListener('click', (e) => {
             e.stopPropagation();
             nicknameInput.node.focus();
         });
