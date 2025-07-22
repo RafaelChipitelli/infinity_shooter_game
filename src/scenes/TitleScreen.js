@@ -34,12 +34,21 @@ export default class TitleScreen extends Phaser.Scene {
             color: '#ffffff'
         }).setOrigin(0.5);
 
-        // Campo para digitar nickname, logo acima do botão
-        const nicknameInput = this.add.dom(centerX, centerY - 40, 'input')
-            .setOrigin(0.5);
-        nicknameInput.node.setAttribute('type', 'text');
-        nicknameInput.node.setAttribute('placeholder', 'Nickname');
-        nicknameInput.node.value = localStorage.getItem('nickname') || '';
+        let domElement = document.getElementById('nickname');
+        let nicknameInput;
+
+        if (domElement) {
+            nicknameInput = { node: domElement };
+            domElement.value = localStorage.getItem('nickname') || '';
+        } else {
+            // Campo para digitar nickname criado via Phaser DOM
+            nicknameInput = this.add.dom(centerX, centerY - 40, 'input')
+                .setOrigin(0.5);
+            nicknameInput.node.setAttribute('type', 'text');
+            nicknameInput.node.setAttribute('placeholder', 'Nickname');
+            nicknameInput.node.value = localStorage.getItem('nickname') || '';
+        }
+
         nicknameInput.node.addEventListener('click', (e) => {
             e.stopPropagation();
             nicknameInput.node.focus();
@@ -55,7 +64,16 @@ export default class TitleScreen extends Phaser.Scene {
             borderRadius: '4px',
             width: '220px',
             textAlign: 'center',
-            cursor: 'text'
+            cursor: 'text',
+            pointerEvents: 'auto',
+            zIndex: 1000
+        });
+
+        nicknameInput.node.addEventListener('focus', () => {
+            this.input.keyboard.enabled = false;
+        });
+        nicknameInput.node.addEventListener('blur', () => {
+            this.input.keyboard.enabled = true;
         });
         // 🔥 Mostrar Top 10 do Firebase
         let startY = 50;

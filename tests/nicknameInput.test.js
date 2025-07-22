@@ -31,7 +31,7 @@ test('nickname input focuses on click', async () => {
     text: jest.fn(() => ({ setOrigin: jest.fn().mockReturnThis(), setInteractive: jest.fn().mockReturnThis(), on: jest.fn().mockReturnThis() })),
     dom: jest.fn(() => ({ node: input, setOrigin: jest.fn().mockReturnThis() }))
   };
-  scene.input = { keyboard: { on: jest.fn() } };
+  scene.input = { keyboard: { on: jest.fn(), enabled: true } };
   scene.scene = { start: jest.fn() };
 
   await scene.create();
@@ -42,4 +42,15 @@ test('nickname input focuses on click', async () => {
   handler({ stopPropagation: stop });
   expect(stop).toHaveBeenCalled();
   expect(focusSpy).toHaveBeenCalled();
+
+  // focus event disables keyboard
+  addEventListenerSpy.mock.calls.find(call => call[0] === 'focus')[1]();
+  expect(scene.input.keyboard.enabled).toBe(false);
+
+  // blur re-enables
+  addEventListenerSpy.mock.calls.find(call => call[0] === 'blur')[1]();
+  expect(scene.input.keyboard.enabled).toBe(true);
+
+  // pointer events style is applied
+  expect(input.style.pointerEvents).toBe('auto');
 });
