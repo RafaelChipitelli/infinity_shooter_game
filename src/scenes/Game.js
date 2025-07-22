@@ -11,7 +11,7 @@ import {
 } from "./helpers/enemies";
 import { fireProjectile, updateProjectiles } from "./helpers/projectiles";
 import { HUD_TEXTS } from "./HUDConstants";
-/* global db */ // habilita uso da variável global `db` do Firebase
+import { db, firebase } from "../firebase";
 
 
 class Game extends Phaser.Scene {
