@@ -9,12 +9,31 @@ export default class TitleScreen extends Phaser.Scene {
 
         // Crie um botão centralizado
         const { centerX, centerY } = this.cameras.main;
-        // Campo para digitar nickname
+
+        // Texto explicando o campo de nickname
+        this.add.text(centerX, centerY - 80, 'Digite seu Nickname', {
+            fontSize: '24px',
+            color: '#ffffff'
+        }).setOrigin(0.5);
+
+        // Campo para digitar nickname, logo acima do botão
         const nicknameInput = this.add.dom(centerX, centerY - 40, 'input')
             .setOrigin(0.5);
         nicknameInput.node.setAttribute('type', 'text');
         nicknameInput.node.setAttribute('placeholder', 'Nickname');
         nicknameInput.node.value = localStorage.getItem('nickname') || '';
+
+        // Estiliza para alto contraste e tamanho maior
+        Object.assign(nicknameInput.node.style, {
+            background: '#ffffff',
+            color: '#000000',
+            padding: '8px 12px',
+            fontSize: '18px',
+            border: '2px solid #000000',
+            borderRadius: '4px',
+            width: '220px',
+            textAlign: 'center'
+        });
         // 🔥 Mostrar Top 10 do Firebase
         let startY = 50;
 
