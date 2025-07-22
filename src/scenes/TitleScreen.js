@@ -5,6 +5,24 @@ import { db } from "../firebase";
 export default class TitleScreen extends Phaser.Scene {
     preload() {}
 
+    async generateDefaultNickname() {
+        let base = 'bob';
+        let candidate = base;
+        let idx = 0;
+        while (true) {
+            const snap = await db
+                .collection('scores')
+                .where('nickname', '==', candidate)
+                .limit(1)
+                .get();
+            if (snap.empty) {
+                return candidate;
+            }
+            idx += 1;
+            candidate = `${base}${idx}`;
+        }
+    }
+
     create() {
 
         // Crie um botão centralizado
@@ -22,6 +40,10 @@ export default class TitleScreen extends Phaser.Scene {
         nicknameInput.node.setAttribute('type', 'text');
         nicknameInput.node.setAttribute('placeholder', 'Nickname');
         nicknameInput.node.value = localStorage.getItem('nickname') || '';
+        nicknameInput.node.addEventListener('pointerdown', (e) => {
+            e.stopPropagation();
+            nicknameInput.node.focus();
+        });
 
         // Estiliza para alto contraste e tamanho maior
         Object.assign(nicknameInput.node.style, {
@@ -65,11 +87,11 @@ export default class TitleScreen extends Phaser.Scene {
             .setInteractive({ useHandCursor: true })
             .on('pointerover', () => button.setTint(0xcccccc))
             .on('pointerout', () => button.clearTint())
-            .on('pointerdown', () => {
-                const value = nicknameInput.node.value.trim();
+            .on('pointerdown', async () => {
+                let value = nicknameInput.node.value.trim();
                 if (!value) {
-                    nicknameInput.node.focus();
-                    return;
+                    value = await this.generateDefaultNickname();
+                    nicknameInput.node.value = value;
                 }
                 localStorage.setItem('nickname', value);
 
