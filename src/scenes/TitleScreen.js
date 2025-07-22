@@ -32,7 +32,8 @@ export default class TitleScreen extends Phaser.Scene {
             border: '2px solid #000000',
             borderRadius: '4px',
             width: '220px',
-            textAlign: 'center'
+            textAlign: 'center',
+            cursor: 'text'
         });
         // 🔥 Mostrar Top 10 do Firebase
         let startY = 50;
@@ -58,11 +59,10 @@ export default class TitleScreen extends Phaser.Scene {
         .catch(err => console.error('Failed to load ranking', err));
         const button = this.add.text(centerX, centerY, 'START', {
             fill: '#0f0',
-            fontSize: '20px',
-            cursor: 'pointer'
+            fontSize: '20px'
         })
             .setOrigin(0.5)
-            .setInteractive()
+            .setInteractive({ useHandCursor: true })
             .on('pointerover', () => button.setTint(0xcccccc))
             .on('pointerout', () => button.clearTint())
             .on('pointerdown', () => {
