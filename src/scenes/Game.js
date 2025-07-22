@@ -134,6 +134,10 @@ class Game extends Phaser.Scene {
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
     }).then(() => {
         this.scene.restart();
+    })
+    .catch(err => {
+        console.error('Failed to save score', err);
+        this.scene.restart();
     });
 }
 

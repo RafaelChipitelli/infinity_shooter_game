@@ -35,7 +35,8 @@ export default class TitleScreen extends Phaser.Scene {
                 color: "#dddddd"
             }).setOrigin(0.5);
             });
-        });
+        })
+        .catch(err => console.error('Failed to load ranking', err));
         const button = this.add.text(centerX, centerY, 'START', {
             fill: '#0f0',
             fontSize: '20px',
