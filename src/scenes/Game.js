@@ -133,14 +133,31 @@ class Game extends Phaser.Scene {
                 time: survivalTime,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             })
-            .then(() => {
-                this.scene.restart();
-            })
-            .catch(err => {
-                console.error('Failed to save score', err);
-                this.scene.restart();
-            });
+                .then(() => {
+                    this.resetGameParams();
+                    this.scene.start('titlescreen');
+                })
+                .catch(err => {
+                    console.error('Failed to save score', err);
+                    this.resetGameParams();
+                    this.scene.start('titlescreen');
+                });
         }
+
+    }
+
+    resetGameParams() {
+        HUD_TEXTS.score = 0;
+        HUD_TEXTS.round = 1;
+        HUD_TEXTS.enemiesAlive = 1;
+        HUD_TEXTS.life = 100;
+        HUD_TEXTS.dps = 1;
+        HUD_TEXTS.gold = 0;
+
+        this.currentRound = 1;
+        this.enemiesTotal = 0;
+        this.playerInitialHealth = HUD_TEXTS.life;
+        this.projectileDamage = HUD_TEXTS.dps;
     }
 
     spawnWave() {

@@ -35,6 +35,7 @@ export default class TitleScreen extends Phaser.Scene {
 
         if (domElement) {
             nicknameInput = { node: domElement };
+            domElement.style.display = 'block';
             domElement.value = localStorage.getItem('nickname') || '';
         } else {
             // Campo para digitar nickname criado via Phaser DOM
@@ -42,6 +43,7 @@ export default class TitleScreen extends Phaser.Scene {
                 .setOrigin(0.5);
             nicknameInput.node.setAttribute('type', 'text');
             nicknameInput.node.setAttribute('placeholder', 'Nickname');
+            nicknameInput.node.style.display = 'block';
             nicknameInput.node.value = localStorage.getItem('nickname') || '';
         }
 
