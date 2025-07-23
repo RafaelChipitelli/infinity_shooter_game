@@ -23,7 +23,7 @@ export default class TitleScreen extends Phaser.Scene {
         }
     }
 
-    create() {
+    async create() {
 
         // Crie um botão centralizado
         const { centerX, centerY } = this.cameras.main;
@@ -73,25 +73,28 @@ export default class TitleScreen extends Phaser.Scene {
         // 🔥 Mostrar Top 10 do Firebase
         let startY = 50;
 
-        db.collection("scores")
-        .orderBy("time", "desc")
-        .limit(10)
-        .get()
-        .then(snapshot => {
+        try {
+            const snapshot = await db
+                .collection("scores")
+                .orderBy("time", "desc")
+                .limit(10)
+                .get();
+
             this.add.text(centerX, startY - 30, "🏆 Ranking:", {
-            fontSize: "20px",
-            color: "#ffffff"
+                fontSize: "20px",
+                color: "#ffffff"
             }).setOrigin(0.5);
 
             snapshot.forEach((doc, index) => {
-            const data = doc.data();
-            this.add.text(centerX, startY + index * 25, `${index + 1}. ${data.nickname} - ${data.time}s`, {
-                fontSize: "16px",
-                color: "#dddddd"
-            }).setOrigin(0.5);
+                const data = doc.data();
+                this.add.text(centerX, startY + index * 25, `${index + 1}. ${data.nickname} - ${data.time}s`, {
+                    fontSize: "16px",
+                    color: "#dddddd"
+                }).setOrigin(0.5);
             });
-        })
-        .catch(err => console.error('Failed to load ranking', err));
+        } catch (err) {
+            console.error('Failed to load ranking', err);
+        }
         const button = this.add.text(centerX, centerY, 'START', {
             fill: '#0f0',
             fontSize: '20px'
