@@ -28,11 +28,6 @@ export default class TitleScreen extends Phaser.Scene {
         // Crie um botão centralizado
         const { centerX, centerY } = this.cameras.main;
 
-        // Texto explicando o campo de nickname
-        this.add.text(centerX, centerY - 80, 'Digite seu Nickname', {
-            fontSize: '24px',
-            color: '#ffffff'
-        }).setOrigin(0.5);
 
         let domElement = document.getElementById('nickname');
         let nicknameInput;
