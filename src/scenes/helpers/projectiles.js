@@ -7,11 +7,11 @@ export function fireProjectile(scene) {
     const playerY = scene.player.y;
 
     let closestEnemy = null;
-    let shortestDist = Infinity;
+    let shortestDistSq = Infinity;
     scene.enemies.getChildren().forEach(enemy => {
-        const dist = Phaser.Math.Distance.Between(enemy.x, enemy.y, playerX, playerY);
-        if (dist < shortestDist) {
-            shortestDist = dist;
+        const distSq = Phaser.Math.Distance.Squared(enemy.x, enemy.y, playerX, playerY);
+        if (distSq < shortestDistSq) {
+            shortestDistSq = distSq;
             closestEnemy = enemy;
         }
     });
@@ -45,12 +45,12 @@ export function updateProjectiles(scene) {
         );
 
         if (
-            Phaser.Math.Distance.Between(
+            Phaser.Math.Distance.Squared(
                 projectile.x,
                 projectile.y,
                 projectile.target.x,
                 projectile.target.y
-            ) < 10
+            ) < 100
         ) {
             projectile.target.destroy();
             scene.enemies.remove(projectile.target, true, true);
