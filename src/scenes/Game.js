@@ -125,22 +125,22 @@ class Game extends Phaser.Scene {
         player.health -= this.enemyDamage;
         HUD_TEXTS.life = player.health;
         if (player.health <= 0) {
-    const nickname = localStorage.getItem('nickname') || 'Anônimo';
-    const survivalTime = Math.floor((this.time.now - this.startTime) / 1000);
+            const nickname = localStorage.getItem('nickname') || 'Anônimo';
+            const survivalTime = Math.floor((this.time.now - this.startTime) / 1000);
 
-    db.collection("scores").add({
-        nickname: nickname,
-        time: survivalTime,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(() => {
-        this.scene.restart();
-    })
-    .catch(err => {
-        console.error('Failed to save score', err);
-        this.scene.restart();
-    });
-}
-
+            db.collection("scores").add({
+                nickname: nickname,
+                time: survivalTime,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                this.scene.restart();
+            })
+            .catch(err => {
+                console.error('Failed to save score', err);
+                this.scene.restart();
+            });
+        }
     }
 
     spawnWave() {
