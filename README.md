@@ -11,3 +11,8 @@ Install dependencies with `npm install` and run:
 ```bash
 npm test
 ```
+
+## Environment Setup
+
+Copy `.env.example` to `.env` and fill in your Firebase credentials. These keys are
+used by `src/firebase.js` when initializing Firebase services.
