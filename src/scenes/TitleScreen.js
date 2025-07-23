@@ -6,10 +6,11 @@ export default class TitleScreen extends Phaser.Scene {
     preload() {}
 
     async generateDefaultNickname() {
-        let base = 'bob';
-        let candidate = base;
-        let idx = 0;
-        while (true) {
+        const base = 'bob';
+        const maxAttempts = 5;
+
+        for (let idx = 0; idx < maxAttempts; idx++) {
+            const candidate = idx === 0 ? base : `${base}${idx}`;
             const snap = await db
                 .collection('scores')
                 .where('nickname', '==', candidate)
@@ -18,9 +19,9 @@ export default class TitleScreen extends Phaser.Scene {
             if (snap.empty) {
                 return candidate;
             }
-            idx += 1;
-            candidate = `${base}${idx}`;
         }
+
+        return `${base}-${Date.now()}`;
     }
 
     async create() {
