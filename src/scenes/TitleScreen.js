@@ -112,6 +112,8 @@ export default class TitleScreen extends Phaser.Scene {
                     nicknameInput.node.value = value;
                 }
                 localStorage.setItem('nickname', value);
+                // Hide the nickname input when starting the game
+                nicknameInput.node.style.display = 'none';
 
                 // Reinicia valores importantes do HUD ao iniciar o jogo
                 HUD_TEXTS.life = 100;
