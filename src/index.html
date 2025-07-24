@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bullet Rush</title>
-<link rel="icon" type="image/png" href="bulletrush.png">
+
+  <!-- Ícone da aba do navegador -->
+  <link rel="icon" type="image/png" href="bulletrush.png" />
+
+  <!-- Estilos internos -->
   <style>
     html, body {
       margin: 0;
@@ -13,9 +17,21 @@
     }
   </style>
   <link rel="stylesheet" href="main.scss">
+
+  <!-- Open Graph (Facebook, WhatsApp, etc) -->
+  <meta property="og:title" content="Bullet Rush" />
+  <meta property="og:description" content="Sobreviva ao caos em Bullet Rush e entre no ranking dos melhores!" />
+  <meta property="og:image" content="https://bulletrush.fun/preview.png" />
+  <meta property="og:url" content="https://bulletrush.fun" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Bullet Rush" />
+  <meta name="twitter:description" content="Sobreviva ao caos em Bullet Rush e entre no ranking dos melhores!" />
+  <meta name="twitter:image" content="https://bulletrush.fun/preview.png" />
 </head>
 <body>
-
   <input id="nickname" type="text" placeholder="Nickname"
     style="position:absolute; top:40%; left:50%; transform:translate(-50%, -50%); z-index:1000; pointer-events:auto;" />
 
@@ -24,8 +40,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script>
   <script type="module" src="firebase.js"></script>
 
-  <!-- 🎮 Seu script Phaser -->
+  <!-- 👾 Phaser -->
   <script src="main.js"></script>
-
 </body>
 </html>
