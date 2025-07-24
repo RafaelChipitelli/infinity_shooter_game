@@ -13,7 +13,7 @@ jest.mock('../src/firebase.js', () => {
     orderBy: jest.fn(function () { return this; }),
     limit: jest.fn(function () { return this; }),
     get: jest.fn(() => Promise.resolve({
-      forEach: (cb) => fakeDocs.forEach((doc, idx) => cb(doc, idx))
+      forEach: (cb) => fakeDocs.forEach((doc) => cb(doc))
     }))
   };
   return { __esModule: true, db, firebase: {} };
