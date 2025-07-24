@@ -94,12 +94,14 @@ export default class TitleScreen extends Phaser.Scene {
                     color: '#dddddd'
                 }).setOrigin(0.5);
             } else {
-                snapshot.forEach((doc, index) => {
+                let idx = 0;
+                snapshot.forEach((doc) => {
                     const data = doc.data();
-                    this.add.text(centerX, startY + index * 25, `${index + 1}. ${data.nickname} - ${data.time}s`, {
+                    this.add.text(centerX, startY + idx * 25, `${idx + 1}. ${data.nickname} - ${data.time}s`, {
                         fontSize: "16px",
                         color: "#dddddd"
                     }).setOrigin(0.5);
+                    idx += 1;
                 });
             }
         } catch (err) {
