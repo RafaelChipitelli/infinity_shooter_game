@@ -88,13 +88,20 @@ export default class TitleScreen extends Phaser.Scene {
                 color: "#ffffff"
             }).setOrigin(0.5);
 
-            snapshot.forEach((doc, index) => {
-                const data = doc.data();
-                this.add.text(centerX, startY + index * 25, `${index + 1}. ${data.nickname} - ${data.time}s`, {
-                    fontSize: "16px",
-                    color: "#dddddd"
+            if (snapshot.empty) {
+                this.add.text(centerX, startY, 'No scores yet', {
+                    fontSize: '16px',
+                    color: '#dddddd'
                 }).setOrigin(0.5);
-            });
+            } else {
+                snapshot.forEach((doc, index) => {
+                    const data = doc.data();
+                    this.add.text(centerX, startY + index * 25, `${index + 1}. ${data.nickname} - ${data.time}s`, {
+                        fontSize: "16px",
+                        color: "#dddddd"
+                    }).setOrigin(0.5);
+                });
+            }
         } catch (err) {
             console.error('Failed to load ranking', err);
         }
