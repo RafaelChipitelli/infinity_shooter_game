@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "parcel build src/index.html --out-dir dist --public-url ./",
+    "build": "parcel build src/index.html --out-dir dist --public-url ./ && cp public/* dist/",
     "build-css": "sass src/main.scss styles.css",
     "test": "jest"
   },
