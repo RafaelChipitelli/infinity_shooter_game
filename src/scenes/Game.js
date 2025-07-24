@@ -39,6 +39,7 @@ class Game extends Phaser.Scene {
         this.startTime = 0;
         this.currentRound = 1;
         this.nextWaveScheduled = false;
+        this.isGameOver = false;
     }
 
     create() {
@@ -122,26 +123,31 @@ class Game extends Phaser.Scene {
     }
 
     handlePlayerEnemyCollision(player, enemy) {
-        player.health -= this.enemyDamage;
+        if (this.isGameOver) {
+            return;
+        }
+
+        player.health = Math.max(player.health - this.enemyDamage, 0);
         HUD_TEXTS.life = player.health;
+
         if (player.health <= 0) {
+            this.isGameOver = true;
+
             const nickname = localStorage.getItem('nickname') || 'Anônimo';
             const survivalTime = Math.floor((this.time.now - this.startTime) / 1000);
 
-            db.collection("scores").add({
-                nickname: nickname,
-                time: survivalTime,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            })
-                .then(() => {
-                    this.resetGameParams();
-                    this.scene.start('titlescreen');
-                })
-                .catch(err => {
-                    console.error('Failed to save score', err);
-                    this.resetGameParams();
-                    this.scene.start('titlescreen');
+            try {
+                db.collection("scores").add({
+                    nickname: nickname,
+                    time: survivalTime,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+            } catch (err) {
+                console.error('Failed to save score', err);
+            }
+
+            this.resetGameParams();
+            this.scene.start('titlescreen');
         }
 
     }
@@ -158,6 +164,7 @@ class Game extends Phaser.Scene {
         this.enemiesTotal = 0;
         this.playerInitialHealth = HUD_TEXTS.life;
         this.projectileDamage = HUD_TEXTS.dps;
+        this.isGameOver = false;
     }
 
     spawnWave() {
