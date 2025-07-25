@@ -79,7 +79,7 @@ export function fireShooterProjectile(scene, shooter) {
     // player's position at the moment of the shot.
     scene.physics.velocityFromRotation(
         angle,
-        scene.enemyBulletSpeed,
+        scene.playerBulletSpeed,
         projectile.body.velocity
     );
 
