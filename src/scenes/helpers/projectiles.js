@@ -63,3 +63,26 @@ export function updateProjectiles(scene) {
         }
     }, scene);
 }
+
+export function fireShooterProjectile(scene, shooter) {
+    const projectile = scene.add.circle(shooter.x, shooter.y, 4, 0xFFA500, 1);
+    scene.physics.add.existing(projectile);
+    const angle = Phaser.Math.Angle.Between(shooter.x, shooter.y, scene.player.x, scene.player.y);
+    projectile.body.setVelocity(
+        Math.cos(angle) * scene.enemyBulletSpeed,
+        Math.sin(angle) * scene.enemyBulletSpeed
+    );
+    scene.enemyBullets.add(projectile);
+}
+
+export function updateEnemyBullets(scene) {
+    scene.enemyBullets.getChildren().forEach(projectile => {
+        const { width, height } = scene.game.config;
+        if (
+            projectile.x < 0 || projectile.x > width ||
+            projectile.y < 0 || projectile.y > height
+        ) {
+            projectile.destroy();
+        }
+    });
+}

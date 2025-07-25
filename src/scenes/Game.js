@@ -7,9 +7,11 @@ import {
 import {
     createEnemies,
     updateEnemies,
-    separateEnemies
+    separateEnemies,
+    createShooterEnemies,
+    updateShooterEnemies
 } from "./helpers/enemies";
-import { fireProjectile, updateProjectiles } from "./helpers/projectiles";
+import { fireProjectile, updateProjectiles, updateEnemyBullets } from "./helpers/projectiles";
 import { HUD_TEXTS } from "./HUDConstants";
 import { db, firebase } from "../firebase";
 
@@ -19,8 +21,11 @@ class Game extends Phaser.Scene {
         super();
         this.player = null;
         this.enemies = null;
+        this.shooters = null;
+        this.enemyBullets = null;
         this.playerSpeed = 150;
         this.enemySpeed = 150;
+        this.enemyBulletSpeed = 200;
         this.playerVelocityX = 0;
         this.playerVelocityY = 0;
         this.cursors = null;
@@ -64,10 +69,15 @@ class Game extends Phaser.Scene {
 
         this.projectiles = this.physics.add.group();
 
+        this.shooters = this.physics.add.group();
+        this.enemyBullets = this.physics.add.group();
+
         // grupo de inimigos para facilitar a colisão
         this.enemies = this.physics.add.group();
 
         this.physics.add.overlap(this.player, this.enemies, this.handlePlayerEnemyCollision, null, this);
+        this.physics.add.overlap(this.player, this.shooters, this.handlePlayerEnemyCollision, null, this);
+        this.physics.add.overlap(this.player, this.enemyBullets, this.handlePlayerBulletCollision, null, this);
 
         // dispara um projétil a cada segundo mirando no inimigo mais próximo
         this.time.addEvent({
@@ -99,11 +109,13 @@ class Game extends Phaser.Scene {
         updatePlayerMovement(this);
         updateEnemies(this);
         separateEnemies(this);
+        updateShooterEnemies(this);
         updateProjectiles(this);
+        updateEnemyBullets(this);
         enforcePlayerBounds(this);
 
         // Atualiza valores do HUD
-        const alive = this.enemies.getChildren().length;
+        const alive = this.enemies.getChildren().length + this.shooters.getChildren().length;
         if (alive === 0 && !this.nextWaveScheduled) {
             this.nextWaveScheduled = true;
             this.time.delayedCall(1000, () => {
@@ -152,6 +164,12 @@ class Game extends Phaser.Scene {
 
     }
 
+    handlePlayerBulletCollision(player, bullet) {
+        if (this.isGameOver) return;
+        bullet.destroy();
+        this.handlePlayerEnemyCollision(player, bullet);
+    }
+
     resetGameParams() {
         HUD_TEXTS.score = 0;
         HUD_TEXTS.round = 1;
@@ -170,7 +188,9 @@ class Game extends Phaser.Scene {
     spawnWave() {
         const enemyCount = this.currentRound * 5;
         createEnemies(this, enemyCount);
-        this.enemiesTotal += enemyCount;
+        const shooterCount = this.currentRound;
+        createShooterEnemies(this, shooterCount);
+        this.enemiesTotal += enemyCount + shooterCount;
     }
 
 }
