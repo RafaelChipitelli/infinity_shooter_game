@@ -64,6 +64,9 @@ export function updateProjectiles(scene) {
                 projectile.target.y
             ) < 100
         ) {
+            if (projectile.target.shootEvent) {
+                scene.time.removeEvent(projectile.target.shootEvent);
+            }
             projectile.target.destroy();
             scene.enemies.remove(projectile.target, true, true);
             scene.shooters.remove(projectile.target, true, true);
