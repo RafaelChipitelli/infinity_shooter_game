@@ -77,7 +77,7 @@ export function createShooterEnemies(scene, count) {
         scene.shooters.add(shooter);
 
         if (scene.time) {
-            scene.time.addEvent({
+            shooter.shootEvent = scene.time.addEvent({
                 delay: 1500,
                 callback: () => fireShooterProjectile(scene, shooter),
                 loop: true
