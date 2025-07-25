@@ -26,6 +26,7 @@ class Game extends Phaser.Scene {
         this.playerSpeed = 150;
         this.enemySpeed = 150;
         this.enemyBulletSpeed = 200;
+        this.playerBulletSpeed = 300;
         this.playerVelocityX = 0;
         this.playerVelocityY = 0;
         this.cursors = null;
