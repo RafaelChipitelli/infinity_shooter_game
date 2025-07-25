@@ -77,9 +77,13 @@ export function fireShooterProjectile(scene, shooter) {
 
     // Ensure the bullet travels with a fixed velocity towards the
     // player's position at the moment of the shot.
+    // Use the enemyBulletSpeed so that the projectile keeps a
+    // constant velocity after it has been fired. This prevents
+    // the bullet from accelerating or tracking the player once
+    // it leaves the shooter.
     scene.physics.velocityFromRotation(
         angle,
-        scene.playerBulletSpeed,
+        scene.enemyBulletSpeed,
         projectile.body.velocity
     );
 
