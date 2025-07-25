@@ -1,5 +1,8 @@
 export function fireProjectile(scene) {
-    if (scene.enemies.getChildren().length === 0) {
+    if (
+        scene.enemies.getChildren().length === 0 &&
+        scene.shooters.getChildren().length === 0
+    ) {
         return;
     }
 
@@ -8,8 +11,17 @@ export function fireProjectile(scene) {
 
     let closestEnemy = null;
     let shortestDistSq = Infinity;
-    scene.enemies.getChildren().forEach(enemy => {
-        const distSq = Phaser.Math.Distance.Squared(enemy.x, enemy.y, playerX, playerY);
+    const potentialTargets = [
+        ...scene.enemies.getChildren(),
+        ...scene.shooters.getChildren()
+    ];
+    potentialTargets.forEach(enemy => {
+        const distSq = Phaser.Math.Distance.Squared(
+            enemy.x,
+            enemy.y,
+            playerX,
+            playerY
+        );
         if (distSq < shortestDistSq) {
             shortestDistSq = distSq;
             closestEnemy = enemy;
@@ -52,8 +64,12 @@ export function updateProjectiles(scene) {
                 projectile.target.y
             ) < 100
         ) {
+            if (projectile.target.shootEvent) {
+                scene.time.removeEvent(projectile.target.shootEvent);
+            }
             projectile.target.destroy();
             scene.enemies.remove(projectile.target, true, true);
+            scene.shooters.remove(projectile.target, true, true);
             projectile.destroy();
         }
 
@@ -62,4 +78,40 @@ export function updateProjectiles(scene) {
             projectile.destroy();
         }
     }, scene);
+}
+
+export function fireShooterProjectile(scene, shooter) {
+    const projectile = scene.add.circle(shooter.x, shooter.y, 4, 0xFFA500, 1);
+    scene.physics.add.existing(projectile);
+
+    // Add the projectile to the group first so the group's create
+    // handler does not overwrite its velocity afterwards.
+    scene.enemyBullets.add(projectile);
+
+    const angle = Phaser.Math.Angle.Between(
+        shooter.x,
+        shooter.y,
+        scene.player.x,
+        scene.player.y
+    );
+
+    // Ensure the bullet travels with a fixed velocity towards the
+    // player's position at the moment of the shot.
+    scene.physics.velocityFromRotation(
+        angle,
+        scene.playerBulletSpeed,
+        projectile.body.velocity
+    );
+}
+
+export function updateEnemyBullets(scene) {
+    scene.enemyBullets.getChildren().forEach(projectile => {
+        const { width, height } = scene.game.config;
+        if (
+            projectile.x < 0 || projectile.x > width ||
+            projectile.y < 0 || projectile.y > height
+        ) {
+            projectile.destroy();
+        }
+    });
 }

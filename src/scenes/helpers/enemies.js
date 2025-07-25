@@ -1,3 +1,5 @@
+import { fireShooterProjectile } from "./projectiles";
+
 export function createEnemies(scene, count) {
     const width = scene.game.config.width;
     const height = scene.game.config.height;
@@ -60,4 +62,49 @@ export function separateEnemies(scene) {
             }
         }
     }
+}
+
+export function createShooterEnemies(scene, count) {
+    const width = scene.game.config.width;
+    const height = scene.game.config.height;
+
+    for (let i = 0; i < count; i++) {
+        const x = Phaser.Math.Between(0, width);
+        const y = Phaser.Math.Between(0, height);
+        const shooter = scene.add.circle(x, y, 10, 0xFFFF00, 1);
+        scene.physics.add.existing(shooter);
+        shooter.body.setVelocity(0, 0);
+        scene.shooters.add(shooter);
+
+        if (scene.time) {
+            shooter.shootEvent = scene.time.addEvent({
+                delay: 1500,
+                callback: () => fireShooterProjectile(scene, shooter),
+                loop: true
+            });
+        }
+    }
+}
+
+export function updateShooterEnemies(scene) {
+    const playerX = scene.player.x;
+    const playerY = scene.player.y;
+    scene.shooters.getChildren().forEach(shooter => {
+        const dist = Phaser.Math.Distance.Between(shooter.x, shooter.y, playerX, playerY);
+        const angle = Phaser.Math.Angle.Between(shooter.x, shooter.y, playerX, playerY);
+
+        if (dist > 210) {
+            shooter.body.setVelocity(
+                Math.cos(angle) * scene.enemySpeed,
+                Math.sin(angle) * scene.enemySpeed
+            );
+        } else if (dist < 190) {
+            shooter.body.setVelocity(
+                -Math.cos(angle) * scene.enemySpeed,
+                -Math.sin(angle) * scene.enemySpeed
+            );
+        } else {
+            shooter.body.setVelocity(0, 0);
+        }
+    });
 }
