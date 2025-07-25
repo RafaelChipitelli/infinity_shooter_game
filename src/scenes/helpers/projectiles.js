@@ -68,6 +68,10 @@ export function fireShooterProjectile(scene, shooter) {
     const projectile = scene.add.circle(shooter.x, shooter.y, 4, 0xFFA500, 1);
     scene.physics.add.existing(projectile);
 
+    // Add the projectile to the group first so the group's create
+    // handler does not overwrite its velocity afterwards.
+    scene.enemyBullets.add(projectile);
+
     const angle = Phaser.Math.Angle.Between(
         shooter.x,
         shooter.y,
@@ -82,8 +86,6 @@ export function fireShooterProjectile(scene, shooter) {
         scene.playerBulletSpeed,
         projectile.body.velocity
     );
-
-    scene.enemyBullets.add(projectile);
 }
 
 export function updateEnemyBullets(scene) {
