@@ -36,7 +36,7 @@ class Game extends Phaser.Scene {
         this.projectileDamage = HUD_TEXTS.dps;
 
         this.playerInitialHealth = HUD_TEXTS.life;
-        this.enemyDamage = 10;
+        this.enemyDamage = 100;
 
         this.touchPointer = null;
 
