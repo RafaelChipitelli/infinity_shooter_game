@@ -13,7 +13,8 @@ jest.mock('phaser', () => ({
 jest.mock('../src/firebase.js', () => ({
   __esModule: true,
   db: {},
-  firebase: {}
+  firebase: {},
+  auth: {}
 }));
 
 import { createShooterEnemies as realCreateShooterEnemies } from '../src/scenes/helpers/enemies.js';

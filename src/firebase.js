@@ -13,7 +13,8 @@ if (!window.firebase.apps?.length) {
   window.firebase.initializeApp(firebaseConfig);
 }
 
-const db = window.firebase.firestore();
 const firebase = window.firebase;
+const db = firebase.firestore();
+const auth = firebase.auth();
 
-export { firebase, db };
+export { firebase, db, auth };

@@ -16,7 +16,7 @@ jest.mock('../src/firebase.js', () => {
       forEach: (cb) => fakeDocs.forEach((doc) => cb(doc))
     }))
   };
-  return { __esModule: true, db, firebase: {} };
+  return { __esModule: true, db, firebase: {}, auth: {} };
 });
 
 import TitleScreen from '../src/scenes/TitleScreen.js';
