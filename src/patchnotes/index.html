@@ -12,28 +12,105 @@
       background-color: #000;
     }
     h1 { color: #ffffff; }
-    section { margin-bottom: 1em; }
-    a { color: #0f0; }
+    h2 { color: #0f0; margin-top: 1.5em; }
+    section { margin-bottom: 2em; }
+    ul { list-style: disc inside; }
+    a { color: #0f0; text-decoration: none; }
+    a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
   <h1>Patch Notes</h1>
+
   <section>
-    <h2>Resumo das Mudanças</h2>
+    <h2>v0.9.0 – 2025-07-26</h2>
     <ul>
-      <li>Implementação inicial com movimentação de jogador e inimigos.</li>
-      <li>Adição de HUD mostrando inimigos restantes e tempo de jogo.</li>
-      <li>Criação de rounds dinâmicos com ondas de inimigos.</li>
-      <li>Sistema de vida para o jogador e para os inimigos.</li>
-      <li>Integração com Firebase para registro de pontuação e ranking.</li>
-      <li>Exibição do ranking na tela inicial.</li>
-      <li>Suporte a controles via teclado e toque em dispositivos móveis.</li>
-      <li>Correções de bugs em colisões e reinício de partida.</li>
-      <li>Otimizações nas trajetórias e velocidade dos projéteis.</li>
-      <li>Adição de inimigos atiradores com projéteis próprios.</li>
-      <li>Ajustes finais de balanceamento e do temporizador.</li>
+      <li><strong>Added:</strong> Página de Patch Notes gerada em <code>/patchnotes.html</code> com renderização de Markdown.</li>
+      <li><strong>Changed:</strong> Link “Patch Notes” integrado ao menu inicial do jogo.</li>
+      <li><strong>Fixed:</strong> Reset do timer ao iniciar novo jogo.</li>
+      <li><strong>Fixed:</strong> Reversão de commit anterior que quebrou a página de Patch Notes.</li>
     </ul>
   </section>
+
+  <section>
+    <h2>v0.8.0 – 2025-07-25</h2>
+    <ul>
+      <li><strong>Added:</strong> Novo tipo de inimigo “shooter” com projéteis.</li>
+      <li><strong>Added:</strong> As balas dos inimigos agora usam a mesma velocidade das balas do player.</li>
+      <li><strong>Changed:</strong> Modo “instakill” para projéteis inimigos aprimorado.</li>
+      <li><strong>Fixed:</strong> Ajustes na velocidade e trajetória das balas dos inimigos.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>v0.7.0 – 2025-07-24</h2>
+    <ul>
+      <li><strong>Added:</strong> UI da leaderboard com mensagem para ranking vazio.</li>
+      <li><strong>Added:</strong> Cópia de assets públicos no build e realocação de <code>preview.png</code> para <code>/public</code>.</li>
+      <li><strong>Added:</strong> Meta tags, título da página e favicon.</li>
+      <li><strong>Fixed:</strong> Correção do índice exibido na tabela de ranking.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>v0.6.0 – 2025-07-23</h2>
+    <ul>
+      <li><strong>Added:</strong> Flag de “game over” e lógica de colisão atualizada.</li>
+      <li><strong>Added:</strong> Documentação no README: servidor de desenvolvimento e processo de build.</li>
+      <li><strong>Added:</strong> Testes Jest para exibição do ranking.</li>
+      <li><strong>Changed:</strong> Limpeza de código e remoção de dicas antigas do nickname input.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>v0.5.0 – 2025-07-22</h2>
+    <ul>
+      <li><strong>Added:</strong> Campo de nickname externo com eventos de foco/blur e tecla ENTER para iniciar o jogo.</li>
+      <li><strong>Added:</strong> Setup de variáveis de ambiente do Firebase e configuração modular.</li>
+      <li><strong>Added:</strong> Gravação e exibição do top-10 scores via Firestore.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>v0.4.0 – 2025-07-21</h2>
+    <ul>
+      <li><strong>Added:</strong> Sistema de rounds dinâmicos e spawn de ondas de inimigos.</li>
+      <li><strong>Added:</strong> Sistema de vida (HP) para player e inimigos.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>v0.3.0 – 2025-07-19</h2>
+    <ul>
+      <li><strong>Added:</strong> Controles touch para mobile e modo paisagem obrigatório.</li>
+      <li><strong>Changed:</strong> Remoção da margem padrão do <code>&lt;body&gt;</code> para canvas responsivo.</li>
+      <li><strong>Changed:</strong> Otimização de <code>.gitignore</code> e scripts de build/Vercel.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>v0.2.0 – 2025-07-16</h2>
+    <ul>
+      <li><strong>Added:</strong> Refatoração do jogo em módulos menores e melhorias no input WASD.</li>
+      <li><strong>Added:</strong> Setup de Jest e testes básicos para <code>TitleScreen</code>.</li>
+      <li><strong>Changed:</strong> Adição de <code>.gitattributes</code> e ajustes de formatação/imports.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>v0.1.1 – 2024-05-04</h2>
+    <ul>
+      <li><strong>Added:</strong> Merge de branch de laboratório e preview de imagem no HTML.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>v0.1.0 – 2024-05-02</h2>
+    <ul>
+      <li><strong>Added:</strong> Commit inicial: engine core com movimentação de player e inimigos.</li>
+    </ul>
+  </section>
+
   <p><a href="https://bulletrush.fun/">Voltar ao jogo</a></p>
 </body>
 </html>
