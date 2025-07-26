@@ -14,13 +14,14 @@ jest.mock('../src/firebase.js', () => {
     limit: jest.fn(function () { return this; }),
     get: jest.fn(() => Promise.resolve({
       forEach: (cb) => fakeDocs.forEach((doc) => cb(doc))
-    }))
+    })),
+    doc: jest.fn(() => ({ set: jest.fn() }))
   };
   return {
     __esModule: true,
     db,
     firebase: {},
-    auth: { onAuthStateChanged: jest.fn() },
+    auth: { onAuthStateChanged: jest.fn(), currentUser: null },
     googleProvider: {}
   };
 });

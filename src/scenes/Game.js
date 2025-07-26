@@ -13,7 +13,7 @@ import {
 } from "./helpers/enemies";
 import { fireProjectile, updateProjectiles, updateEnemyBullets } from "./helpers/projectiles";
 import { HUD_TEXTS } from "./HUDConstants";
-import { db, firebase } from "../firebase";
+import { db, firebase, auth } from "../firebase";
 
 
 class Game extends Phaser.Scene {
@@ -150,6 +150,10 @@ class Game extends Phaser.Scene {
             const nickname = localStorage.getItem('nickname') || 'Anônimo';
             const survivalTime = Math.floor((Date.now() - this.startTime) / 1000);
 
+            const alive = this.enemies.getChildren().length +
+                this.shooters.getChildren().length;
+            const enemiesKilled = this.enemiesTotal - alive;
+
             try {
                 db.collection("scores").add({
                     nickname: nickname,
@@ -158,6 +162,19 @@ class Game extends Phaser.Scene {
                 });
             } catch (err) {
                 console.error('Failed to save score', err);
+            }
+
+            if (auth.currentUser) {
+                try {
+                    db.collection('users')
+                        .doc(auth.currentUser.uid)
+                        .set({
+                            totalPlayTime: firebase.firestore.FieldValue.increment(survivalTime),
+                            totalEnemiesKilled: firebase.firestore.FieldValue.increment(enemiesKilled)
+                        }, { merge: true });
+                } catch (err) {
+                    console.error('Failed to update user stats', err);
+                }
             }
 
             this.resetGameParams();

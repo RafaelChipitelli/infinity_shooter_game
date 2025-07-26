@@ -8,13 +8,14 @@ jest.mock('../src/firebase.js', () => {
     collection: jest.fn(function () { return this; }),
     orderBy: jest.fn(function () { return this; }),
     limit: jest.fn(function () { return this; }),
-    get: jest.fn(() => Promise.resolve({ empty: true, forEach: jest.fn() }))
+    get: jest.fn(() => Promise.resolve({ empty: true, forEach: jest.fn() })),
+    doc: jest.fn(() => ({ set: jest.fn() }))
   };
   return {
     __esModule: true,
     db,
     firebase: {},
-    auth: { onAuthStateChanged: jest.fn() },
+    auth: { onAuthStateChanged: jest.fn(), currentUser: null },
     googleProvider: {}
   };
 });

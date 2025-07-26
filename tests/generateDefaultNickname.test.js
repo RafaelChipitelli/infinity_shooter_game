@@ -11,7 +11,8 @@ jest.mock('../src/firebase.js', () => {
         limit: jest.fn(() => ({
           get: getMock
         }))
-      }))
+      })),
+      doc: jest.fn(() => ({ set: jest.fn() }))
     }))
   };
   return {
@@ -19,7 +20,7 @@ jest.mock('../src/firebase.js', () => {
     db,
     firebase: {},
     getMock,
-    auth: { onAuthStateChanged: jest.fn() },
+    auth: { onAuthStateChanged: jest.fn(), currentUser: null },
     googleProvider: {}
   };
 });

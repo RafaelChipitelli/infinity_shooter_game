@@ -12,9 +12,9 @@ jest.mock('phaser', () => ({
 
 jest.mock('../src/firebase.js', () => ({
   __esModule: true,
-  db: {},
+  db: { collection: jest.fn(() => ({ doc: jest.fn(() => ({ set: jest.fn() })) })) },
   firebase: {},
-  auth: { onAuthStateChanged: jest.fn() },
+  auth: { onAuthStateChanged: jest.fn(), currentUser: null },
   googleProvider: {}
 }));
 
