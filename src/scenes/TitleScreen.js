@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import { HUD_TEXTS } from "./HUDConstants";
-import { db } from "../firebase";
+import { db, auth, googleProvider } from "../firebase";
 
 export default class TitleScreen extends Phaser.Scene {
     preload() {}
@@ -31,7 +31,16 @@ export default class TitleScreen extends Phaser.Scene {
 
 
         let domElement = document.getElementById('nickname');
+        let loginButton = document.getElementById('google-login');
+        let userInfo = document.getElementById('user-info');
         let nicknameInput;
+
+        if (!loginButton) {
+            loginButton = document.createElement('button');
+        }
+        if (!userInfo) {
+            userInfo = document.createElement('div');
+        }
 
         if (domElement) {
             nicknameInput = { node: domElement };
@@ -72,6 +81,40 @@ export default class TitleScreen extends Phaser.Scene {
         });
         nicknameInput.node.addEventListener('blur', () => {
             this.input.keyboard.enabled = true;
+        });
+
+        loginButton.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            try {
+                if (auth.currentUser) {
+                    await auth.signOut();
+                } else {
+                    await auth.signInWithPopup(googleProvider);
+                }
+            } catch (err) {
+                console.error('Auth error', err);
+            }
+        });
+
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                const displayName = user.displayName || user.email;
+                nicknameInput.node.value = displayName;
+                nicknameInput.node.style.display = 'none';
+                loginButton.textContent = 'Logout';
+                userInfo.innerHTML = `<img src="${user.photoURL}" style="width:32px;height:32px;border-radius:50%;"> <span>${displayName}</span>`;
+                localStorage.setItem('nickname', displayName);
+                try {
+                    await db.collection('users').doc(user.uid).set({ displayName }, { merge: true });
+                } catch (err) {
+                    console.error('Failed to save user', err);
+                }
+            } else {
+                loginButton.textContent = 'Login with Google';
+                userInfo.innerHTML = '';
+                nicknameInput.node.style.display = 'block';
+                nicknameInput.node.value = localStorage.getItem('nickname') || '';
+            }
         });
         // 🔥 Mostrar Top 10 do Firebase
         let startY = 50;

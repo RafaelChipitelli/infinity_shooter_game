@@ -10,7 +10,13 @@ jest.mock('../src/firebase.js', () => {
     limit: jest.fn(function () { return this; }),
     get: jest.fn(() => Promise.resolve({ empty: true, forEach: jest.fn() }))
   };
-  return { __esModule: true, db, firebase: {} };
+  return {
+    __esModule: true,
+    db,
+    firebase: {},
+    auth: { onAuthStateChanged: jest.fn() },
+    googleProvider: {}
+  };
 });
 
 import TitleScreen from '../src/scenes/TitleScreen.js';
