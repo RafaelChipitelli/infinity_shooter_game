@@ -148,11 +148,13 @@ class Game extends Phaser.Scene {
             this.isGameOver = true;
 
             const nickname = localStorage.getItem('nickname') || 'Anônimo';
+            const userId = localStorage.getItem('userId') || null;
             const survivalTime = Math.floor((Date.now() - this.startTime) / 1000);
 
             try {
                 db.collection("scores").add({
                     nickname: nickname,
+                    userId: userId,
                     time: survivalTime,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });

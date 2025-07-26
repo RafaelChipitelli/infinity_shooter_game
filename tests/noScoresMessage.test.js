@@ -19,10 +19,14 @@ test('shows message when no scores', async () => {
   const scene = new TitleScreen();
   scene.cameras = { main: { centerX: 0, centerY: 0 } };
   const input = document.createElement('input');
+  const pass = document.createElement('input');
   scene.add = {
     text: jest.fn(() => ({ setOrigin: jest.fn().mockReturnThis(), setInteractive: jest.fn().mockReturnThis(), on: jest.fn().mockReturnThis() })),
-    dom: jest.fn(() => ({ node: input, setOrigin: jest.fn().mockReturnThis() }))
+    dom: jest.fn()
   };
+  scene.add.dom
+    .mockReturnValueOnce({ node: input, setOrigin: jest.fn().mockReturnThis() })
+    .mockReturnValueOnce({ node: pass, setOrigin: jest.fn().mockReturnThis() });
   scene.input = { keyboard: { on: jest.fn(), enabled: true } };
   scene.scene = { start: jest.fn() };
 

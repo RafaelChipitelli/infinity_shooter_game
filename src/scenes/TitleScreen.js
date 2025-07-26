@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { HUD_TEXTS } from "./HUDConstants";
 import { db } from "../firebase";
+import bcrypt from "bcryptjs";
 
 export default class TitleScreen extends Phaser.Scene {
     preload() {}
@@ -24,6 +25,33 @@ export default class TitleScreen extends Phaser.Scene {
         return `${base}-${Date.now()}`;
     }
 
+    async loginOrRegister(nickname, password) {
+        const snap = await db
+            .collection('users')
+            .where('nickname', '==', nickname)
+            .limit(1)
+            .get();
+
+        if (snap.empty) {
+            const passwordHash = await bcrypt.hash(password, 10);
+            const doc = await db.collection('users').add({
+                nickname,
+                passwordHash,
+            });
+            localStorage.setItem('userId', doc.id);
+            return doc.id;
+        } else {
+            const doc = snap.docs[0];
+            const data = doc.data();
+            const match = await bcrypt.compare(password, data.passwordHash);
+            if (!match) {
+                throw new Error('invalid');
+            }
+            localStorage.setItem('userId', doc.id);
+            return doc.id;
+        }
+    }
+
     async create() {
 
         // Crie um botão centralizado
@@ -32,6 +60,8 @@ export default class TitleScreen extends Phaser.Scene {
 
         let domElement = document.getElementById('nickname');
         let nicknameInput;
+        let passDom = document.getElementById('password');
+        let passwordInput;
 
         if (domElement) {
             nicknameInput = { node: domElement };
@@ -47,9 +77,27 @@ export default class TitleScreen extends Phaser.Scene {
             nicknameInput.node.value = localStorage.getItem('nickname') || '';
         }
 
+        if (passDom) {
+            passwordInput = { node: passDom };
+            passDom.style.display = 'block';
+            passDom.value = '';
+        } else {
+            passwordInput = this.add.dom(centerX, centerY + 10, 'input')
+                .setOrigin(0.5);
+            passwordInput.node.setAttribute('type', 'password');
+            passwordInput.node.setAttribute('placeholder', 'Password');
+            passwordInput.node.style.display = 'block';
+            passwordInput.node.value = '';
+        }
+
         nicknameInput.node.addEventListener('click', (e) => {
             e.stopPropagation();
             nicknameInput.node.focus();
+        });
+
+        passwordInput.node.addEventListener('click', (e) => {
+            e.stopPropagation();
+            passwordInput.node.focus();
         });
 
         // Estiliza para alto contraste e tamanho maior
@@ -67,10 +115,31 @@ export default class TitleScreen extends Phaser.Scene {
             zIndex: 1000
         });
 
+        Object.assign(passwordInput.node.style, {
+            background: '#ffffff',
+            color: '#000000',
+            padding: '8px 12px',
+            fontSize: '18px',
+            border: '2px solid #000000',
+            borderRadius: '4px',
+            width: '220px',
+            textAlign: 'center',
+            cursor: 'text',
+            pointerEvents: 'auto',
+            zIndex: 1000
+        });
+
         nicknameInput.node.addEventListener('focus', () => {
             this.input.keyboard.enabled = false;
         });
         nicknameInput.node.addEventListener('blur', () => {
+            this.input.keyboard.enabled = true;
+        });
+
+        passwordInput.node.addEventListener('focus', () => {
+            this.input.keyboard.enabled = false;
+        });
+        passwordInput.node.addEventListener('blur', () => {
             this.input.keyboard.enabled = true;
         });
         // 🔥 Mostrar Top 10 do Firebase
@@ -116,14 +185,27 @@ export default class TitleScreen extends Phaser.Scene {
             .on('pointerover', () => button.setTint(0xcccccc))
             .on('pointerout', () => button.clearTint())
             .on('pointerdown', async () => {
-                let value = nicknameInput.node.value.trim();
-                if (!value) {
-                    value = await this.generateDefaultNickname();
-                    nicknameInput.node.value = value;
+                const nicknameValue = nicknameInput.node.value.trim();
+                const passwordValue = passwordInput.node.value.trim();
+                let finalNickname = nicknameValue;
+                if (!finalNickname) {
+                    finalNickname = await this.generateDefaultNickname();
+                    nicknameInput.node.value = finalNickname;
                 }
-                localStorage.setItem('nickname', value);
-                // Hide the nickname input when starting the game
+                if (!passwordValue) {
+                    return; // require password
+                }
+
+                try {
+                    await this.loginOrRegister(finalNickname, passwordValue);
+                } catch (err) {
+                    console.error('Auth failed', err);
+                    return;
+                }
+
+                localStorage.setItem('nickname', finalNickname);
                 nicknameInput.node.style.display = 'none';
+                passwordInput.node.style.display = 'none';
 
                 // Reinicia valores importantes do HUD ao iniciar o jogo
                 HUD_TEXTS.life = 100;
