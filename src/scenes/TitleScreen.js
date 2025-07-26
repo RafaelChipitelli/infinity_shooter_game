@@ -133,6 +133,32 @@ export default class TitleScreen extends Phaser.Scene {
                 this.scene.start('game');
             });
 
+        // Botão para página de Login
+        const loginBtn = this.add.text(centerX, centerY + 40, 'Login', {
+            fill: '#0f0',
+            fontSize: '18px'
+        })
+            .setOrigin(0.5)
+            .setInteractive({ useHandCursor: true })
+            .on('pointerover', () => loginBtn.setTint(0xcccccc))
+            .on('pointerout', () => loginBtn.clearTint())
+            .on('pointerdown', () => {
+                window.location.href = 'login.html';
+            });
+
+        // Botão para página de registro
+        const registerBtn = this.add.text(centerX, centerY + 80, 'Registrar', {
+            fill: '#0f0',
+            fontSize: '18px'
+        })
+            .setOrigin(0.5)
+            .setInteractive({ useHandCursor: true })
+            .on('pointerover', () => registerBtn.setTint(0xcccccc))
+            .on('pointerout', () => registerBtn.clearTint())
+            .on('pointerdown', () => {
+                window.location.href = 'register.html';
+            });
+
         // Permitir que a tecla ENTER também inicie o jogo
         this.input.keyboard.on('keydown-ENTER', () => button.emit('pointerdown'));
     }

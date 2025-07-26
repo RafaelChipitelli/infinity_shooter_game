@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Registrar - Bullet Rush</title>
+  <link rel="icon" type="image/png" href="bulletrush.png" />
+  <link rel="stylesheet" href="main.scss">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #000;
+      color: #fff;
+    }
+    input, button {
+      margin: 8px;
+      padding: 8px 12px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <input id="reg-nickname" type="text" placeholder="Nickname" />
+  <input id="reg-password" type="password" placeholder="Senha" />
+  <button id="reg-submit">Registrar</button>
+
+  <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script>
+  <script type="module" src="firebase.js"></script>
+  <script type="module" src="register.js"></script>
+</body>
+</html>
