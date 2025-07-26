@@ -91,7 +91,8 @@ class Game extends Phaser.Scene {
         this.spawnWave();
 
         // Inicializa HUD
-        this.startTime = this.time.now;
+        // Use real world time to avoid persistence across scene restarts
+        this.startTime = Date.now();
         this.hudTexts.enemiesAlive = this.add.text(10, 10, '', { fontSize: '16px', fill: '#ffffff' });
         this.hudTexts.enemiesDefeated = this.add.text(10, 30, '', { fontSize: '16px', fill: '#ffffff' });
         this.hudTexts.gold = this.add.text(10, 50, `Gold: ${HUD_TEXTS.gold}`, { fontSize: '16px', fill: '#ffffff' });
@@ -129,7 +130,7 @@ class Game extends Phaser.Scene {
         const defeated = this.enemiesTotal - alive;
         this.hudTexts.enemiesAlive.setText(`Enemies Alive: ${alive}`);
         this.hudTexts.enemiesDefeated.setText(`Enemies Defeated: ${defeated}`);
-        const timeSeconds = Math.floor((this.time.now - this.startTime) / 1000);
+        const timeSeconds = Math.floor((Date.now() - this.startTime) / 1000);
         this.hudTexts.timeAlive.setText(`Time Alive: ${timeSeconds}s`);
         this.hudTexts.life.setText(`Life: ${HUD_TEXTS.life}`);
         this.hudTexts.round.setText(`Round: ${this.currentRound}`);
@@ -147,7 +148,7 @@ class Game extends Phaser.Scene {
             this.isGameOver = true;
 
             const nickname = localStorage.getItem('nickname') || 'Anônimo';
-            const survivalTime = Math.floor((this.time.now - this.startTime) / 1000);
+            const survivalTime = Math.floor((Date.now() - this.startTime) / 1000);
 
             try {
                 db.collection("scores").add({
@@ -184,6 +185,7 @@ class Game extends Phaser.Scene {
         this.playerInitialHealth = HUD_TEXTS.life;
         this.projectileDamage = HUD_TEXTS.dps;
         this.isGameOver = false;
+        this.startTime = Date.now();
     }
 
     spawnWave() {
