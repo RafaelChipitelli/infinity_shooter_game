@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "parcel src/index.html",
-    "build": "parcel build src/index.html --out-dir dist --public-url ./ && cp public/* dist/",
+    "start": "parcel src/index.html src/register.html src/login.html src/patchnotes/index.html",
+    "build": "parcel build src/index.html src/register.html src/login.html src/patchnotes/index.html --out-dir dist --public-url ./ && cp public/* dist/",
     "build-css": "sass src/main.scss styles.css",
     "test": "jest"
   },
