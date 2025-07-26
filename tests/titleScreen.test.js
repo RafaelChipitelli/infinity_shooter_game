@@ -6,7 +6,9 @@ jest.mock('phaser', () => ({
 jest.mock('../src/firebase.js', () => ({
   __esModule: true,
   db: {},
-  firebase: {}
+  firebase: {},
+  auth: { onAuthStateChanged: jest.fn() },
+  googleProvider: {}
 }));
 
 import TitleScreen from '../src/scenes/TitleScreen.js';
