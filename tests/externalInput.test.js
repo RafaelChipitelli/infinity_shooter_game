@@ -15,7 +15,13 @@ jest.mock('../src/firebase.js', () => {
       }))
     }))
   };
-  return { __esModule: true, db, firebase: {} };
+  return {
+    __esModule: true,
+    db,
+    firebase: {},
+    auth: { onAuthStateChanged: jest.fn() },
+    googleProvider: {}
+  };
 });
 
 test('uses external nickname input if available', async () => {

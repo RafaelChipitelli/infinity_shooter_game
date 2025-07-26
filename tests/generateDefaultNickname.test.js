@@ -14,7 +14,14 @@ jest.mock('../src/firebase.js', () => {
       }))
     }))
   };
-  return { __esModule: true, db, firebase: {}, getMock };
+  return {
+    __esModule: true,
+    db,
+    firebase: {},
+    getMock,
+    auth: { onAuthStateChanged: jest.fn() },
+    googleProvider: {}
+  };
 });
 
 import { getMock } from '../src/firebase.js';
