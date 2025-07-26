@@ -29,6 +29,16 @@ export default class TitleScreen extends Phaser.Scene {
         // Crie um botão centralizado
         const { centerX, centerY } = this.cameras.main;
 
+        this.add
+            .text(100, 50, 'Registrar', { cursor: 'pointer' })
+            .setInteractive()
+            .on('pointerup', () => this.scene.start('Register'));
+
+        this.add
+            .text(300, 50, 'Login', { cursor: 'pointer' })
+            .setInteractive()
+            .on('pointerup', () => this.scene.start('Login'));
+
 
         let domElement = document.getElementById('nickname');
         let nicknameInput;

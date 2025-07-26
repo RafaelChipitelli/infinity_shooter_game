@@ -46,11 +46,27 @@ class Game extends Phaser.Scene {
         this.currentRound = 1;
         this.nextWaveScheduled = false;
         this.isGameOver = false;
+
+        this.playerMoney = 0;
     }
 
-    create() {
+    async create() {
         this.cursors = this.input.keyboard.createCursorKeys();
         this.wasdKeys = this.input.keyboard.addKeys('W,A,S,D');
+
+        const nick = localStorage.getItem('currentUser');
+        if (nick) {
+            try {
+                const doc = await db.collection('users').doc(nick).get();
+                if (doc.exists) {
+                    const { money, skin } = doc.data();
+                    this.playerMoney = money;
+                    this.load.image('playerSkin', `/skins/${skin}.png`);
+                }
+            } catch (err) {
+                console.error('Failed to load user data', err);
+            }
+        }
 
         this.player = createPlayer(this);
         HUD_TEXTS.life = this.player.health;
@@ -186,6 +202,16 @@ class Game extends Phaser.Scene {
         this.projectileDamage = HUD_TEXTS.dps;
         this.isGameOver = false;
         this.startTime = Date.now();
+    }
+
+    async updateUserData(updates) {
+        const nick = localStorage.getItem('currentUser');
+        if (!nick) return;
+        try {
+            await db.collection('users').doc(nick).update(updates);
+        } catch (err) {
+            console.error('Failed to update user', err);
+        }
     }
 
     spawnWave() {

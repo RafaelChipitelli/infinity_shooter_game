@@ -2,6 +2,8 @@ import Phaser from "phaser";
 
 import TitleScreen from "./scenes/TitleScreen";
 import Game from "./scenes/Game";
+import RegisterScene from "./scenes/RegisterScene";
+import LoginScene from "./scenes/LoginScene";
 
 // Defina dimensões priorizando sempre a orientação horizontal
 let width = Math.max(window.innerWidth, window.innerHeight);
@@ -46,6 +48,8 @@ window.addEventListener('resize', () => {
 
 // Registra cenas
 game.scene.add("titlescreen", TitleScreen);
+game.scene.add("Register", RegisterScene);
+game.scene.add("Login", LoginScene);
 game.scene.add("game", Game);
 
 // Inicia com a tela de título
