@@ -2,6 +2,13 @@ import Phaser from "phaser";
 import { HUD_TEXTS } from "./HUDConstants";
 import { db, auth, googleProvider } from "../firebase";
 
+export async function upsertUser(user, nickname) {
+    return db
+        .collection('users')
+        .doc(user.uid)
+        .set({ uid: user.uid, email: user.email, nickname }, { merge: true });
+}
+
 export default class TitleScreen extends Phaser.Scene {
     preload() {}
 
@@ -98,14 +105,14 @@ export default class TitleScreen extends Phaser.Scene {
 
         auth.onAuthStateChanged(async (user) => {
             if (user) {
-                const displayName = user.displayName || user.email;
-                nicknameInput.node.value = displayName;
+                const nickname = user.displayName || nicknameInput.node.value || user.email;
+                nicknameInput.node.value = nickname;
                 nicknameInput.node.style.display = 'none';
                 loginButton.textContent = 'Logout';
-                userInfo.innerHTML = `<img src="${user.photoURL}" style="width:32px;height:32px;border-radius:50%;"> <span>${displayName}</span>`;
-                localStorage.setItem('nickname', displayName);
+                userInfo.innerHTML = `<img src="${user.photoURL}" style="width:32px;height:32px;border-radius:50%;"> <span>${nickname}</span>`;
+                localStorage.setItem('nickname', nickname);
                 try {
-                    await db.collection('users').doc(user.uid).set({ displayName }, { merge: true });
+                    await upsertUser(user, nickname);
                 } catch (err) {
                     console.error('Failed to save user', err);
                 }
