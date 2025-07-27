@@ -13,7 +13,7 @@ import {
 } from "./helpers/enemies";
 import { fireProjectile, updateProjectiles, updateEnemyBullets } from "./helpers/projectiles";
 import { HUD_TEXTS } from "./HUDConstants";
-import { db, firebase } from "../firebase";
+import { db, firebase, auth } from "../firebase";
 
 
 class Game extends Phaser.Scene {
@@ -46,6 +46,16 @@ class Game extends Phaser.Scene {
         this.currentRound = 1;
         this.nextWaveScheduled = false;
         this.isGameOver = false;
+
+        // Session tracking
+        this.sessionStart = 0;
+        this.enemiesKilledSess = 0;
+    }
+
+    init() {
+        // Initialize per-session counters
+        this.sessionStart = Date.now();
+        this.enemiesKilledSess = 0;
     }
 
     create() {
@@ -136,7 +146,7 @@ class Game extends Phaser.Scene {
         this.hudTexts.round.setText(`Round: ${this.currentRound}`);
     }
 
-    handlePlayerEnemyCollision(player, enemy) {
+    async handlePlayerEnemyCollision(player, enemy) {
         if (this.isGameOver) {
             return;
         }
@@ -160,16 +170,35 @@ class Game extends Phaser.Scene {
                 console.error('Failed to save score', err);
             }
 
+            // Update user statistics
+            try {
+                const user = (auth && auth.currentUser) || this.registry?.get?.('user');
+                if (user) {
+                    await db
+                        .collection('users')
+                        .doc(user.uid)
+                        .set(
+                            {
+                                totalTimeAlive: firebase.firestore.FieldValue.increment(Math.floor((Date.now() - this.sessionStart) / 1000)),
+                                totalEnemiesKilled: firebase.firestore.FieldValue.increment(this.enemiesKilledSess)
+                            },
+                            { merge: true }
+                        );
+                }
+            } catch (err) {
+                console.error('Failed to update user stats', err);
+            }
+
             this.resetGameParams();
             this.scene.start('titlescreen');
         }
 
     }
 
-    handlePlayerBulletCollision(player, bullet) {
+    async handlePlayerBulletCollision(player, bullet) {
         if (this.isGameOver) return;
         bullet.destroy();
-        this.handlePlayerEnemyCollision(player, bullet);
+        await this.handlePlayerEnemyCollision(player, bullet);
     }
 
     resetGameParams() {
