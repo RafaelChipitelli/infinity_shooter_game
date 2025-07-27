@@ -3,24 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <title>Patch Notes - Bullet Rush</title>
-  <link rel="stylesheet" href="../main.scss">
   <style>
-    body {
-      font-family: sans-serif;
-      margin: 40px;
-      color: #dddddd;
-      background-color: #000;
-    }
+    body { font-family: sans-serif; margin: 40px; color: #dddddd; background-color: #000; }
     h1 { color: #ffffff; }
     h2 { color: #0f0; margin-top: 1.5em; }
     section { margin-bottom: 2em; }
     ul { list-style: disc inside; }
+    code { background: rgba(255,255,255,0.1); padding: 2px 4px; border-radius: 4px; }
     a { color: #0f0; text-decoration: none; }
     a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
   <h1>Patch Notes</h1>
+
+  <!-- Mais recentes primeiro -->
+  <section>
+    <h2>v1.3.0 – 2025-07-27</h2>
+    <ul>
+      <li><strong>Added:</strong> Shop de skins “Bottts” via DiceBear API.</li>
+      <li><strong>Added:</strong> Botão “Buy Bottts Skin” que deduz gold e salva <code>botttsSkinUrl</code> no Firestore.</li>
+      <li><strong>Added:</strong> Geração de avatar Bottts SVG aleatório usando <code>seed</code> e endpoint <code>bottts/svg</code>.</li>
+      <li><strong>Changed:</strong> Funções <code>handleBuySkin()</code> e <code>showPurchasedSkin()</code> para carregar e aplicar a skin SVG com CORS.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>v1.2.0 – 2025-07-27</h2>
+    <ul>
+      <li><strong>Added:</strong> Sistema de economia básica: gold acumulado a cada 10 inimigos mortos (1 gold).</li>
+      <li><strong>Added:</strong> Exibição de <code>goldText</code> no HUD e atualização no <code>handleGameOver()</code>.</li>
+      <li><strong>Changed:</strong> Firestore atualiza campo <code>gold</code> no documento do usuário com <code>FieldValue.increment()</code>.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>v1.1.0 – 2025-07-27</h2>
+    <ul>
+      <li><strong>Added:</strong> Persistência de estatísticas de jogo (totalEnemiesKilled e totalTimeAlive) no Firestore.</li>
+      <li><strong>Added:</strong> Incremento atômico dessas estatísticas usando <code>FieldValue.increment()</code>.</li>
+      <li><strong>Changed:</strong> GameScene inicializa e carrega estatísticas no <code>init()</code> e atualiza no fim de cada partida.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>v1.0.0 – 2025-07-27</h2>
+    <ul>
+      <li><strong>Added:</strong> Autenticação com Google usando Firebase Auth.</li>
+      <li><strong>Added:</strong> Botão “Login with Google” na tela inicial e lógica de logout.</li>
+      <li><strong>Added:</strong> Exibição de avatar (photoURL) e nome do usuário no canto superior após login.</li>
+      <li><strong>Added:</strong> Função <code>upsertUser</code> para guardar perfil do usuário em <code>users/{uid}</code> no Firestore.</li>
+    </ul>
+  </section>
 
   <section>
     <h2>v0.9.0 – 2025-07-26</h2>
@@ -85,29 +119,6 @@
       <li><strong>Added:</strong> Controles touch para mobile e modo paisagem obrigatório.</li>
       <li><strong>Changed:</strong> Remoção da margem padrão do <code>&lt;body&gt;</code> para canvas responsivo.</li>
       <li><strong>Changed:</strong> Otimização de <code>.gitignore</code> e scripts de build/Vercel.</li>
-    </ul>
-  </section>
-
-  <section>
-    <h2>v0.2.0 – 2025-07-16</h2>
-    <ul>
-      <li><strong>Added:</strong> Refatoração do jogo em módulos menores e melhorias no input WASD.</li>
-      <li><strong>Added:</strong> Setup de Jest e testes básicos para <code>TitleScreen</code>.</li>
-      <li><strong>Changed:</strong> Adição de <code>.gitattributes</code> e ajustes de formatação/imports.</li>
-    </ul>
-  </section>
-
-  <section>
-    <h2>v0.1.1 – 2024-05-04</h2>
-    <ul>
-      <li><strong>Added:</strong> Merge de branch de laboratório e preview de imagem no HTML.</li>
-    </ul>
-  </section>
-
-  <section>
-    <h2>v0.1.0 – 2024-05-02</h2>
-    <ul>
-      <li><strong>Added:</strong> Commit inicial: engine core com movimentação de player e inimigos.</li>
     </ul>
   </section>
 
