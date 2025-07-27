@@ -14,7 +14,7 @@ jest.mock('../src/firebase.js', () => {
   const incrementMock = jest.fn(v => ({ inc: v }));
   const firebase = { firestore: { FieldValue: { increment: incrementMock, serverTimestamp: jest.fn() } } };
   const auth = { currentUser: { uid: '1' } };
-  return { __esModule: true, db, firebase, auth, googleProvider: {}, setMock, incrementMock, addMock };
+  return { __esModule: true, db, firebase, auth, googleProvider: {}, setMock, incrementMock, addMock, FieldValue: firebase.firestore.FieldValue };
 });
 
 import { setMock, incrementMock } from '../src/firebase.js';

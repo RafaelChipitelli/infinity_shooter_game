@@ -21,7 +21,8 @@ jest.mock('../src/firebase.js', () => {
     db,
     firebase: {},
     auth: { onAuthStateChanged: jest.fn() },
-    googleProvider: {}
+    googleProvider: {},
+    FieldValue: {}
   };
 });
 

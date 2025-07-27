@@ -32,7 +32,8 @@ jest.mock('../src/firebase.js', () => {
     auth,
     googleProvider: {},
     setMock,
-    incrementMock
+    incrementMock,
+    FieldValue: firebase.firestore.FieldValue
   };
 });
 

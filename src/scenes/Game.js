@@ -13,7 +13,7 @@ import {
 } from "./helpers/enemies";
 import { fireProjectile, updateProjectiles, updateEnemyBullets } from "./helpers/projectiles";
 import { HUD_TEXTS } from "./HUDConstants";
-import { db, firebase, auth } from "../firebase";
+import { db, firebase, auth, FieldValue } from "../firebase";
 
 
 class Game extends Phaser.Scene {
@@ -38,6 +38,9 @@ class Game extends Phaser.Scene {
         this.playerInitialHealth = HUD_TEXTS.life;
         this.enemyDamage = 100;
 
+        this.playerSkinUrl = null;
+        this.useSprite = false;
+
         this.touchPointer = null;
 
         this.hudTexts = {};
@@ -52,6 +55,16 @@ class Game extends Phaser.Scene {
         this.enemiesKilledSess = 0;
     }
 
+    preload() {
+        const user = this.registry.get('currentUser');
+        const url = user && user.botttsSkinUrl;
+        if (url) {
+            this.playerSkinUrl = url;
+            this.load.image('playerSkin', url);
+            this.useSprite = true;
+        }
+    }
+
     init() {
         // Initialize per-session counters
         this.sessionStart = Date.now();
@@ -63,7 +76,13 @@ class Game extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
         this.wasdKeys = this.input.keyboard.addKeys('W,A,S,D');
 
-        this.player = createPlayer(this);
+        if (this.useSprite) {
+            this.player = this.physics.add.sprite(400, 250, 'playerSkin');
+            this.player.setDisplaySize(20, 20);
+            this.player.health = this.playerInitialHealth;
+        } else {
+            this.player = createPlayer(this);
+        }
         HUD_TEXTS.life = this.player.health;
 
         // Registra eventos de toque para movimentação
