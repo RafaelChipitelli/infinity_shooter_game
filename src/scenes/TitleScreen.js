@@ -1,12 +1,17 @@
 import Phaser from "phaser";
 import { HUD_TEXTS } from "./HUDConstants";
-import { db, auth, googleProvider } from "../firebase";
+import { db, auth, googleProvider, firebase } from "../firebase";
 
 export async function upsertUser(user, nickname) {
     return db
         .collection('users')
         .doc(user.uid)
-        .set({ uid: user.uid, email: user.email, nickname }, { merge: true });
+        .set({
+            uid: user.uid,
+            email: user.email,
+            nickname,
+            gold: firebase.firestore.FieldValue.increment(0)
+        }, { merge: true });
 }
 
 export default class TitleScreen extends Phaser.Scene {
@@ -40,6 +45,7 @@ export default class TitleScreen extends Phaser.Scene {
         let domElement = document.getElementById('nickname');
         let loginButton = document.getElementById('google-login');
         let userInfo = document.getElementById('user-info');
+        let userGoldEl = document.getElementById('user-gold');
         let nicknameInput;
 
         if (!loginButton) {
@@ -47,6 +53,9 @@ export default class TitleScreen extends Phaser.Scene {
         }
         if (!userInfo) {
             userInfo = document.createElement('div');
+        }
+        if (!userGoldEl) {
+            userGoldEl = document.createElement('div');
         }
 
         if (domElement) {
@@ -113,12 +122,18 @@ export default class TitleScreen extends Phaser.Scene {
                 localStorage.setItem('nickname', nickname);
                 try {
                     await upsertUser(user, nickname);
+                    const snap = await db.collection('users').doc(user.uid).get();
+                    const gold = snap.exists && snap.data().gold ? snap.data().gold : 0;
+                    if (userGoldEl) {
+                        userGoldEl.textContent = `Gold: ${gold}`;
+                    }
                 } catch (err) {
                     console.error('Failed to save user', err);
                 }
             } else {
                 loginButton.textContent = 'Login with Google';
                 userInfo.innerHTML = '';
+                if (userGoldEl) userGoldEl.textContent = '';
                 nicknameInput.node.style.display = 'block';
                 nicknameInput.node.value = localStorage.getItem('nickname') || '';
             }

@@ -5,7 +5,11 @@ jest.mock('phaser', () => ({
 
 jest.mock('../src/firebase.js', () => {
   const setMock = jest.fn();
-  const usersCollection = { doc: jest.fn(() => ({ set: setMock })) };
+  const incrementMock = jest.fn(v => ({ inc: v }));
+  const usersCollection = { doc: jest.fn(() => ({
+    set: setMock,
+    get: jest.fn(() => Promise.resolve({ exists: true, data: () => ({ gold: 0 }) }))
+  })) };
   const scoresCollection = {
     orderBy: jest.fn(() => ({
       limit: jest.fn(() => ({
@@ -20,19 +24,21 @@ jest.mock('../src/firebase.js', () => {
     })
   };
   const auth = { onAuthStateChanged: jest.fn() };
+  const firebase = { firestore: { FieldValue: { increment: incrementMock } } };
   return {
     __esModule: true,
     db,
-    firebase: {},
+    firebase,
     auth,
     googleProvider: {},
-    setMock
+    setMock,
+    incrementMock
   };
 });
 
 import TitleScreen from '../src/scenes/TitleScreen.js';
 import Phaser from 'phaser';
-import { auth, setMock } from '../src/firebase.js';
+import { auth, setMock, incrementMock } from '../src/firebase.js';
 
 test('TitleScreen extends Phaser.Scene', () => {
   const scene = new TitleScreen();
@@ -56,7 +62,8 @@ test('saves user info on login', async () => {
   await cb({ uid: '1', email: 'a@a.com', displayName: 'Nick', photoURL: '' });
 
   expect(setMock).toHaveBeenCalledWith(
-    { uid: '1', email: 'a@a.com', nickname: 'Nick' },
+    { uid: '1', email: 'a@a.com', nickname: 'Nick', gold: { inc: 0 } },
     { merge: true }
   );
+  expect(incrementMock).toHaveBeenCalledWith(0);
 });
