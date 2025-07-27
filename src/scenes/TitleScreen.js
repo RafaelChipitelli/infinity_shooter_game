@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import { HUD_TEXTS } from "./HUDConstants";
-import { db, auth, googleProvider, firebase } from "../firebase";
+import { db, auth, googleProvider, firebase, FieldValue } from "../firebase";
 
 export async function upsertUser(user, nickname) {
     return db
@@ -13,6 +13,8 @@ export async function upsertUser(user, nickname) {
             gold: firebase.firestore.FieldValue.increment(0)
         }, { merge: true });
 }
+
+const BOTTT_SKIN_COST = 5;
 
 export default class TitleScreen extends Phaser.Scene {
     preload() {}
@@ -37,6 +39,9 @@ export default class TitleScreen extends Phaser.Scene {
     }
 
     async create() {
+
+        this.playerGold = 0;
+        this.skinImg = null;
 
         // Crie um botão centralizado
         const { centerX, centerY } = this.cameras.main;
@@ -123,10 +128,15 @@ export default class TitleScreen extends Phaser.Scene {
                 try {
                     await upsertUser(user, nickname);
                     const snap = await db.collection('users').doc(user.uid).get();
-                    const gold = snap.exists && snap.data().gold ? snap.data().gold : 0;
+                    const data = snap.exists ? snap.data() : {};
+                    const gold = data.gold || 0;
+                    this.playerGold = gold;
+                    user.botttsSkinUrl = data.botttsSkinUrl;
+                    this.registry.set('currentUser', user);
                     if (userGoldEl) {
                         userGoldEl.textContent = `Gold: ${gold}`;
                     }
+                    if (data.botttsSkinUrl) this.showPurchasedSkin(data.botttsSkinUrl);
                 } catch (err) {
                     console.error('Failed to save user', err);
                 }
@@ -136,6 +146,7 @@ export default class TitleScreen extends Phaser.Scene {
                 if (userGoldEl) userGoldEl.textContent = '';
                 nicknameInput.node.style.display = 'block';
                 nicknameInput.node.value = localStorage.getItem('nickname') || '';
+                this.registry.set('currentUser', null);
             }
         });
         // 🔥 Mostrar Top 10 do Firebase
@@ -172,6 +183,17 @@ export default class TitleScreen extends Phaser.Scene {
         } catch (err) {
             console.error('Failed to load ranking', err);
         }
+
+        const buySkinBtn = this.add.text(centerX, centerY + 100, 'Buy Bottts Skin (5 gold)', {
+            fontSize:'18px',
+            fill:'#ff0',
+            backgroundColor:'#111',
+            padding:{x:8,y:4}
+        })
+          .setOrigin(0.5)
+          .setInteractive({ useHandCursor:true })
+          .on('pointerup', () => this.handleBuySkin());
+
         const button = this.add.text(centerX, centerY, 'START', {
             fill: '#0f0',
             fontSize: '20px'
@@ -200,5 +222,48 @@ export default class TitleScreen extends Phaser.Scene {
 
         // Permitir que a tecla ENTER também inicie o jogo
         this.input.keyboard.on('keydown-ENTER', () => button.emit('pointerdown'));
+    }
+
+    async handleBuySkin() {
+        try {
+            const user = this.registry.get('currentUser');
+            if (!user) return alert('Faça login primeiro!');
+            const userRef = db.collection('users').doc(user.uid);
+            const snap = await userRef.get();
+            const data = snap.data() || {};
+            if ((data.gold || 0) < BOTTT_SKIN_COST) {
+                return alert('Gold insuficiente!');
+            }
+            const seed = Math.random().toString(36).substring(2,10);
+            const skinUrl = `https://api.dicebear.com/9.x/bottts/svg?seed=${seed}&size=128`;
+            await userRef.update({
+                gold: FieldValue.increment(-BOTTT_SKIN_COST),
+                botttsSkinUrl: skinUrl
+            });
+            const regUser = this.registry.get('currentUser');
+            if (regUser) {
+                regUser.botttsSkinUrl = skinUrl;
+                this.registry.set('currentUser', regUser);
+            }
+            this.playerGold = (data.gold || 0) - BOTTT_SKIN_COST;
+            const userGoldEl = document.getElementById('user-gold');
+            if (userGoldEl) userGoldEl.textContent = `Gold: ${this.playerGold}`;
+            this.showPurchasedSkin(skinUrl);
+        } catch (err) {
+            console.error('Buy skin failed', err);
+        }
+    }
+
+    showPurchasedSkin(url) {
+        const { centerX } = this.cameras.main;
+        if (this.skinImg) this.skinImg.destroy();
+        this.skinImg = this.add.image(centerX + 200, 50, null)
+            .setOrigin(0.5)
+            .setDisplaySize(64, 64);
+        this.load.image('botttsSkin', url);
+        this.load.once('complete', () => {
+            this.skinImg.setTexture('botttsSkin');
+        });
+        this.load.start();
     }
 }
