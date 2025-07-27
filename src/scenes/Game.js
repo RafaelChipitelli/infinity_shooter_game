@@ -56,6 +56,7 @@ class Game extends Phaser.Scene {
         // Initialize per-session counters
         this.sessionStart = Date.now();
         this.enemiesKilledSess = 0;
+        HUD_TEXTS.gold = 0;
     }
 
     create() {
@@ -156,6 +157,9 @@ class Game extends Phaser.Scene {
 
         if (player.health <= 0) {
             this.isGameOver = true;
+
+            // ensure gold reflects total enemies killed this session
+            HUD_TEXTS.gold = Math.floor(this.enemiesKilledSess / 10);
 
             const nickname = localStorage.getItem('nickname') || 'Anônimo';
             const survivalTime = Math.floor((Date.now() - this.startTime) / 1000);
