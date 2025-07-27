@@ -234,8 +234,8 @@ export default class TitleScreen extends Phaser.Scene {
             if ((data.gold || 0) < BOTTT_SKIN_COST) {
                 return alert('Gold insuficiente!');
             }
-            const seed = Math.random().toString(36).substring(2, 10);
-            const skinUrl = `https://api.dicebear.com/10.x/bottts/png?seed=${seed}&size=128`;
+            const seed = Math.random().toString(36).substring(2,10);
+            const skinUrl = `https://api.dicebear.com/9.x/bottts/svg?seed=${seed}&size=128`;
             await userRef.update({
                 gold: FieldValue.increment(-BOTTT_SKIN_COST),
                 botttsSkinUrl: skinUrl
