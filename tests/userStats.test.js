@@ -33,9 +33,11 @@ test('updates user stats on player death', async () => {
   expect(setMock).toHaveBeenCalledWith(
     {
       totalTimeAlive: { inc: expect.any(Number) },
-      totalEnemiesKilled: { inc: 2 }
+      totalEnemiesKilled: { inc: 2 },
+      gold: { inc: 0 }
     },
     { merge: true }
   );
   expect(incrementMock).toHaveBeenCalledWith(2);
+  expect(incrementMock).toHaveBeenCalledWith(0);
 });

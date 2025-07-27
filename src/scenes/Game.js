@@ -180,7 +180,8 @@ class Game extends Phaser.Scene {
                         .set(
                             {
                                 totalTimeAlive: firebase.firestore.FieldValue.increment(Math.floor((Date.now() - this.sessionStart) / 1000)),
-                                totalEnemiesKilled: firebase.firestore.FieldValue.increment(this.enemiesKilledSess)
+                                totalEnemiesKilled: firebase.firestore.FieldValue.increment(this.enemiesKilledSess),
+                                gold: firebase.firestore.FieldValue.increment(HUD_TEXTS.gold)
                             },
                             { merge: true }
                         );
