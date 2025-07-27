@@ -15,7 +15,8 @@ if (!window.firebase.apps?.length) {
 
 const db = window.firebase.firestore();
 const firebase = window.firebase;
+const FieldValue = window.firebase.firestore.FieldValue;
 const auth = window.firebase.auth();
 const googleProvider = new window.firebase.auth.GoogleAuthProvider();
 
-export { firebase, db, auth, googleProvider };
+export { firebase, auth, googleProvider, db, FieldValue };

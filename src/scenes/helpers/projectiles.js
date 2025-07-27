@@ -1,3 +1,5 @@
+import { HUD_TEXTS } from "../HUDConstants";
+
 export function fireProjectile(scene) {
     if (
         scene.enemies.getChildren().length === 0 &&
@@ -70,6 +72,16 @@ export function updateProjectiles(scene) {
             projectile.target.destroy();
             scene.enemies.remove(projectile.target, true, true);
             scene.shooters.remove(projectile.target, true, true);
+            if (typeof scene.enemiesKilledSess === 'number') {
+                scene.enemiesKilledSess += 1;
+                if (scene.hudTexts && scene.hudTexts.gold) {
+                    const newGold = Math.floor(scene.enemiesKilledSess / 10);
+                    if (newGold > HUD_TEXTS.gold) {
+                        HUD_TEXTS.gold = newGold;
+                        scene.hudTexts.gold.setText(`Gold: ${HUD_TEXTS.gold}`);
+                    }
+                }
+            }
             projectile.destroy();
         }
 
