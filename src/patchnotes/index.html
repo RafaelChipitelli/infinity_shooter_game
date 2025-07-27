@@ -40,7 +40,7 @@
   <section>
     <h2>v1.1.0 – 2025-07-27</h2>
     <ul>
-      <li><strong>Added:</strong> Persistência de estatísticas de jogo (totalEnemiesKilled e totalTimeAlive) no Firestore.</li>
+      <li><strong>Added:</strong> Persistência de estatísticas de jogo (<code>totalEnemiesKilled</code> e <code>totalTimeAlive</code>) no Firestore.</li>
       <li><strong>Added:</strong> Incremento atômico dessas estatísticas usando <code>FieldValue.increment()</code>.</li>
       <li><strong>Changed:</strong> GameScene inicializa e carrega estatísticas no <code>init()</code> e atualiza no fim de cada partida.</li>
     </ul>
@@ -49,30 +49,30 @@
   <section>
     <h2>v1.0.0 – 2025-07-27</h2>
     <ul>
-      <li><strong>Added:</strong> Autenticação com Google usando Firebase Auth.</li>
-      <li><strong>Added:</strong> Botão “Login with Google” na tela inicial e lógica de logout.</li>
-      <li><strong>Added:</strong> Exibição de avatar (photoURL) e nome do usuário no canto superior após login.</li>
-      <li><strong>Added:</strong> Função <code>upsertUser</code> para guardar perfil do usuário em <code>users/{uid}</code> no Firestore.</li>
+      <li><strong>Added:</strong> Autenticação com Google via Firebase Auth.</li>
+      <li><strong>Added:</strong> Botão “Login with Google” e lógica de logout na tela inicial.</li>
+      <li><strong>Added:</strong> Exibição de avatar (<code>photoURL</code>) e nome do usuário.</li>
+      <li><strong>Added:</strong> Função <code>upsertUser</code> para guardar perfil do usuário no Firestore.</li>
     </ul>
   </section>
 
   <section>
     <h2>v0.9.0 – 2025-07-26</h2>
     <ul>
-      <li><strong>Added:</strong> Página de Patch Notes gerada em <code>/patchnotes.html</code> com renderização de Markdown.</li>
-      <li><strong>Changed:</strong> Link “Patch Notes” integrado ao menu inicial do jogo.</li>
+      <li><strong>Added:</strong> Página de Patch Notes como <code>/patchnotes.html</code>, renderizando Markdown.</li>
+      <li><strong>Changed:</strong> Link “Patch Notes” no menu inicial.</li>
       <li><strong>Fixed:</strong> Reset do timer ao iniciar novo jogo.</li>
-      <li><strong>Fixed:</strong> Reversão de commit anterior que quebrou a página de Patch Notes.</li>
+      <li><strong>Fixed:</strong> Reversão de commit que quebrou a página.</li>
     </ul>
   </section>
 
   <section>
     <h2>v0.8.0 – 2025-07-25</h2>
     <ul>
-      <li><strong>Added:</strong> Novo tipo de inimigo “shooter” com projéteis.</li>
-      <li><strong>Added:</strong> As balas dos inimigos agora usam a mesma velocidade das balas do player.</li>
+      <li><strong>Added:</strong> Tipo de inimigo “shooter” com projéteis.</li>
+      <li><strong>Added:</strong> Balas dos inimigos usam mesma velocidade do player.</li>
       <li><strong>Changed:</strong> Modo “instakill” para projéteis inimigos aprimorado.</li>
-      <li><strong>Fixed:</strong> Ajustes na velocidade e trajetória das balas dos inimigos.</li>
+      <li><strong>Fixed:</strong> Ajustes de velocidade e trajetória das balas.</li>
     </ul>
   </section>
 
@@ -80,35 +80,35 @@
     <h2>v0.7.0 – 2025-07-24</h2>
     <ul>
       <li><strong>Added:</strong> UI da leaderboard com mensagem para ranking vazio.</li>
-      <li><strong>Added:</strong> Cópia de assets públicos no build e realocação de <code>preview.png</code> para <code>/public</code>.</li>
-      <li><strong>Added:</strong> Meta tags, título da página e favicon.</li>
-      <li><strong>Fixed:</strong> Correção do índice exibido na tabela de ranking.</li>
+      <li><strong>Added:</strong> Copiar assets públicos e mover <code>preview.png</code> para <code>/public</code>.</li>
+      <li><strong>Added:</strong> Meta tags, título e favicon.</li>
+      <li><strong>Fixed:</strong> Correção do índice na tabela de ranking.</li>
     </ul>
   </section>
 
   <section>
     <h2>v0.6.0 – 2025-07-23</h2>
     <ul>
-      <li><strong>Added:</strong> Flag de “game over” e lógica de colisão atualizada.</li>
-      <li><strong>Added:</strong> Documentação no README: servidor de desenvolvimento e processo de build.</li>
-      <li><strong>Added:</strong> Testes Jest para exibição do ranking.</li>
-      <li><strong>Changed:</strong> Limpeza de código e remoção de dicas antigas do nickname input.</li>
+      <li><strong>Added:</strong> Flag de “game over” e lógica de colisão.</li>
+      <li><strong>Added:</strong> Documentação no README sobre dev server e build.</li>
+      <li><strong>Added:</strong> Testes Jest para leaderboard.</li>
+      <li><strong>Changed:</strong> Limpeza de código e remoção de dicas antigas.</li>
     </ul>
   </section>
 
   <section>
     <h2>v0.5.0 – 2025-07-22</h2>
     <ul>
-      <li><strong>Added:</strong> Campo de nickname externo com eventos de foco/blur e tecla ENTER para iniciar o jogo.</li>
-      <li><strong>Added:</strong> Setup de variáveis de ambiente do Firebase e configuração modular.</li>
-      <li><strong>Added:</strong> Gravação e exibição do top-10 scores via Firestore.</li>
+      <li><strong>Added:</strong> Nickname externo com foco/blur e ENTER para iniciar.</li>
+      <li><strong>Added:</strong> Config modular do Firebase e variáveis de ambiente.</li>
+      <li><strong>Added:</strong> Top-10 scores via Firestore.</li>
     </ul>
   </section>
 
   <section>
     <h2>v0.4.0 – 2025-07-21</h2>
     <ul>
-      <li><strong>Added:</strong> Sistema de rounds dinâmicos e spawn de ondas de inimigos.</li>
+      <li><strong>Added:</strong> Sistema de rounds dinâmicos e spawn de inimigos.</li>
       <li><strong>Added:</strong> Sistema de vida (HP) para player e inimigos.</li>
     </ul>
   </section>
@@ -116,9 +116,32 @@
   <section>
     <h2>v0.3.0 – 2025-07-19</h2>
     <ul>
-      <li><strong>Added:</strong> Controles touch para mobile e modo paisagem obrigatório.</li>
-      <li><strong>Changed:</strong> Remoção da margem padrão do <code>&lt;body&gt;</code> para canvas responsivo.</li>
-      <li><strong>Changed:</strong> Otimização de <code>.gitignore</code> e scripts de build/Vercel.</li>
+      <li><strong>Added:</strong> Controles touch e modo paisagem obrigatório.</li>
+      <li><strong>Changed:</strong> Remoção de margens para canvas responsivo.</li>
+      <li><strong>Changed:</strong> Otimização de <code>.gitignore</code> e scripts de build.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>v0.2.0 – 2025-07-16</h2>
+    <ul>
+      <li><strong>Added:</strong> Refatoração do Game em módulos e melhorias no input WASD.</li>
+      <li><strong>Added:</strong> Setup de Jest e testes básicos para <code>TitleScreen</code>.</li>
+      <li><strong>Changed:</strong> Adição de <code>.gitattributes</code> e ajustes de imports.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>v0.1.1 – 2024-05-04</h2>
+    <ul>
+      <li><strong>Added:</strong> Merge da branch de laboratório e preview de imagem no HTML.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>v0.1.0 – 2024-05-02</h2>
+    <ul>
+      <li><strong>Added:</strong> Commit inicial: engine core com movimento de player e inimigos.</li>
     </ul>
   </section>
 
