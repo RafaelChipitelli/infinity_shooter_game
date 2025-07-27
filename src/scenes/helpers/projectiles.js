@@ -70,6 +70,9 @@ export function updateProjectiles(scene) {
             projectile.target.destroy();
             scene.enemies.remove(projectile.target, true, true);
             scene.shooters.remove(projectile.target, true, true);
+            if (typeof scene.enemiesKilledSess === 'number') {
+                scene.enemiesKilledSess += 1;
+            }
             projectile.destroy();
         }
 
