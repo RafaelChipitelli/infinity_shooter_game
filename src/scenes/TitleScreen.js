@@ -136,7 +136,12 @@ export default class TitleScreen extends Phaser.Scene {
                     if (userGoldEl) {
                         userGoldEl.textContent = `Gold: ${gold}`;
                     }
-                    if (data.botttsSkinUrl) this.showPurchasedSkin(data.botttsSkinUrl);
+                    const skinEl = document.getElementById('user-skin');
+                    if (data.botttsSkinUrl) {
+                        this.showPurchasedSkin(data.botttsSkinUrl);
+                    } else if (skinEl) {
+                        skinEl.style.display = 'none';
+                    }
                 } catch (err) {
                     console.error('Failed to save user', err);
                 }
@@ -144,6 +149,8 @@ export default class TitleScreen extends Phaser.Scene {
                 loginButton.textContent = 'Login with Google';
                 userInfo.innerHTML = '';
                 if (userGoldEl) userGoldEl.textContent = '';
+                const userSkin = document.getElementById('user-skin');
+                if (userSkin) userSkin.style.display = 'none';
                 nicknameInput.node.style.display = 'block';
                 nicknameInput.node.value = localStorage.getItem('nickname') || '';
                 this.registry.set('currentUser', null);
@@ -255,15 +262,22 @@ export default class TitleScreen extends Phaser.Scene {
     }
 
     showPurchasedSkin(url) {
-        const { centerX } = this.cameras.main;
-        if (this.skinImg) this.skinImg.destroy();
-        this.skinImg = this.add.image(centerX + 200, 50, null)
-            .setOrigin(0.5)
-            .setDisplaySize(64, 64);
-        this.load.image('botttsSkin', url);
-        this.load.once('complete', () => {
-            this.skinImg.setTexture('botttsSkin');
-        });
-        this.load.start();
+        let el = document.getElementById('user-skin');
+        if (!el) {
+            el = document.createElement('img');
+            el.id = 'user-skin';
+            Object.assign(el.style, {
+                position: 'absolute',
+                top: '72px',
+                right: '140px',
+                width: '64px',
+                height: '64px',
+                zIndex: 1000,
+                display: 'none'
+            });
+            document.body.appendChild(el);
+        }
+        el.src = url;
+        el.style.display = 'block';
     }
 }
