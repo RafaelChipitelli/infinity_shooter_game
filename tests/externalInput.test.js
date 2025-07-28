@@ -32,6 +32,7 @@ test('uses external nickname input if available', async () => {
 
   const scene = new TitleScreen();
   scene.cameras = { main: { centerX: 0, centerY: 0 } };
+  scene.scale = { on: jest.fn() };
   scene.add = {
     text: jest.fn(() => ({ setOrigin: jest.fn().mockReturnThis(), setInteractive: jest.fn().mockReturnThis(), on: jest.fn().mockReturnThis() })),
     dom: jest.fn()
