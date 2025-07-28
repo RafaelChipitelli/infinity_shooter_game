@@ -25,6 +25,7 @@ import TitleScreen from '../src/scenes/TitleScreen.js';
 test('nickname input focuses on click', async () => {
   const scene = new TitleScreen();
   scene.cameras = { main: { centerX: 0, centerY: 0 } };
+  scene.scale = { on: jest.fn() };
 
   const input = document.createElement('input');
   const addEventListenerSpy = jest.spyOn(input, 'addEventListener');
