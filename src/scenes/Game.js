@@ -147,7 +147,7 @@ class Game extends Phaser.Scene {
         enforcePlayerBounds(this);
 
         // Atualiza valores do HUD
-        const alive = this.enemies.getChildren().length + this.shooters.getChildren().length;
+        const alive = this.enemies.countActive(true) + this.shooters.countActive(true);
         if (alive === 0 && !this.nextWaveScheduled) {
             this.nextWaveScheduled = true;
             this.time.delayedCall(1000, () => {
