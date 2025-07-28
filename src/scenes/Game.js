@@ -73,6 +73,18 @@ class Game extends Phaser.Scene {
     }
 
     create() {
+        // Ajusta a viewport da câmera em redimensionamentos
+        this.scale.on('resize', (size) => {
+            this.cameras.main.setViewport(0, 0, size.width, size.height);
+        });
+
+        // Limites iniciais da câmera caso o mapa ultrapasse a tela
+        this.cameras.main.setBounds(
+            0,
+            0,
+            this.game.config.width,
+            this.game.config.height
+        );
         this.cursors = this.input.keyboard.createCursorKeys();
         this.wasdKeys = this.input.keyboard.addKeys('W,A,S,D');
 

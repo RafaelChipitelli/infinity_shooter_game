@@ -19,8 +19,10 @@ const config = {
         }
     },
     scale: {
-        mode: Phaser.Scale.RESIZE,
-        autoCenter: Phaser.Scale.CENTER_BOTH
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        min: { width: 360, height: 240 },
+        max: { width: 1920, height: 1080 }
     },
 
     // 🧩 Ativa suporte para DOM Elements (como input de nickname)
@@ -36,13 +38,6 @@ const game = new Phaser.Game(config);
 if (screen.orientation && screen.orientation.lock) {
     screen.orientation.lock('landscape').catch(() => {});
 }
-
-// Ajusta tamanho caso a tela seja redimensionada
-window.addEventListener('resize', () => {
-    width = Math.max(window.innerWidth, window.innerHeight);
-    height = Math.min(window.innerWidth, window.innerHeight);
-    game.scale.resize(width, height);
-});
 
 // Registra cenas
 game.scene.add("titlescreen", TitleScreen);

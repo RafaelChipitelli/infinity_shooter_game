@@ -40,6 +40,11 @@ export default class TitleScreen extends Phaser.Scene {
 
     async create() {
 
+        // Ajusta a viewport da câmera em redimensionamentos
+        this.scale.on('resize', (size) => {
+            this.cameras.main.setViewport(0, 0, size.width, size.height);
+        });
+
         this.playerGold = 0;
         this.skinImg = null;
 
