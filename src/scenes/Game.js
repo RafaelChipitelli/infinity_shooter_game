@@ -15,6 +15,26 @@ import { fireProjectile, updateProjectiles, updateEnemyBullets } from "./helpers
 import { HUD_TEXTS } from "./HUDConstants";
 import { db, firebase, auth, FieldValue } from "../firebase";
 
+const BG_TILE_KEY = 'bg-tile';
+
+function createDynamicTileTexture(scene) {
+    if (scene.textures.exists(BG_TILE_KEY)) {
+        return;
+    }
+    const size = 64;
+    const texture = scene.textures.createCanvas(BG_TILE_KEY, size, size);
+    const ctx = texture.getContext();
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, size, size);
+    ctx.fillStyle = '#1a1a1a';
+    for (let y = 0; y < size; y += 16) {
+        for (let x = 0; x < size; x += 16) {
+            ctx.fillRect(x + 6, y + 6, 2, 2);
+        }
+    }
+    texture.refresh();
+}
+
 
 class Game extends Phaser.Scene {
     constructor() {
@@ -73,9 +93,22 @@ class Game extends Phaser.Scene {
     }
 
     create() {
-        // Ajusta a viewport da câmera em redimensionamentos
+        createDynamicTileTexture(this);
+
+        const { width, height } = this.scale;
+        this.bgFar = this.add.tileSprite(0, 0, width, height, BG_TILE_KEY).setOrigin(0, 0);
+        this.bgFar.setScrollFactor(0);
+        this.bgFar.setDepth(-2);
+
+        this.bgNear = this.add.tileSprite(0, 0, width, height, BG_TILE_KEY).setOrigin(0, 0);
+        this.bgNear.setScrollFactor(0);
+        this.bgNear.setDepth(-1);
+
+        // Ajusta a viewport e os backgrounds em redimensionamentos
         this.scale.on('resize', (size) => {
             this.cameras.main.setViewport(0, 0, size.width, size.height);
+            this.bgFar.setSize(size.width, size.height);
+            this.bgNear.setSize(size.width, size.height);
         });
 
         // Limites iniciais da câmera caso o mapa ultrapasse a tela
@@ -149,8 +182,19 @@ class Game extends Phaser.Scene {
         // movimentação será controlada diretamente no método update
     }
 
-    update() {
+    update(time, delta) {
         updatePlayerMovement(this);
+
+        const vx = this.player.body.velocity.x;
+        const vy = this.player.body.velocity.y;
+        const dt = delta / 1000;
+        const farFactor = 0.15;
+        const nearFactor = 0.35;
+        this.bgFar.tilePositionX += vx * farFactor * dt;
+        this.bgFar.tilePositionY += vy * farFactor * dt;
+        this.bgNear.tilePositionX += vx * nearFactor * dt;
+        this.bgNear.tilePositionY += vy * nearFactor * dt;
+
         updateEnemies(this);
         separateEnemies(this);
         updateShooterEnemies(this);
